@@ -11,7 +11,7 @@ export default function HomeScreen() {
       headerBackgroundColor={{ light: '#FFFFFF', dark: '#1D3D47' }}
       headerImage={
         <Image
-          source={require('@/assets/images/as-tagline.jpg')}
+          source={require('@/assets/images/Audience-Synergy-Logo_200.jpg')}
           style={styles.reactLogo}
         />
       }>
@@ -66,11 +66,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   reactLogo: {
-    width: '80%',
-    maxWidth: 1200,
-    height: 'auto',
-    marginHorizontal: '10%',
-    marginTop: 20,
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
     alignSelf: 'center',
+    marginTop: 20,
   },
 });
