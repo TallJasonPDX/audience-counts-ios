@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
+    marginBottom: 100,
   },
   stepContainer: {
     gap: 8,
@@ -66,8 +67,10 @@ const styles = StyleSheet.create({
   },
   reactLogo: {
     width: '80%',
-    zoom: 0.4,
-    textalign: 'center',
-    position: 'relative',
+    maxWidth: 1200,
+    height: 'auto',
+    marginHorizontal: '10%',
+    marginTop: 20,
+    alignSelf: 'center',
   },
 });
