@@ -71,7 +71,9 @@ const styles = StyleSheet.create({
   },
   reactLogo: {
     width: "80%",
-    maxWidth: 1200,
+    height: undefined,
+    aspectRatio: 1,
+    resizeMode: "contain",
     marginHorizontal: "10%",
     marginTop: 20,
     alignSelf: "center",
