@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 3,
-    marginBottom: 100,
+    marginBottom: 20,
   },
   stepContainer: {
     gap: 8,
@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     resizeMode: "contain",
     marginHorizontal: "10%",
-    marginTop: 20,
+    marginTop: 10,
+    marginBottom: 10,
     alignSelf: "center",
   },
 });
