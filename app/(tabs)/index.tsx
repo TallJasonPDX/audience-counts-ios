@@ -70,13 +70,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   reactLogo: {
-    width: '100%',
-    height: undefined,
-    aspectRatio: 1,
+    width: "80%",
+    height: 200, // Still explicitly set the height
     resizeMode: "contain",
-    paddingHorizontal: '10%',
-    marginTop: 10,
-    marginBottom: 10,
     alignSelf: "center",
   },
 });
