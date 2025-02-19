@@ -1,43 +1,52 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+// app/(tabs)/_layout.tsx
+import { Tabs } from "expo-router";
+import { IconSymbol } from "@/components/ui/IconSymbol"; // Assuming you have this
+import { useAuth } from "../hooks/useAuth"; // Import useAuth
+import { useEffect } from "react";
+import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { user, loading } = useAuth();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login"); // Go back to login screen
+    }
+  }, [user, loading]);
+
+  if (!user) {
+    return null; // Important: Don't render tabs if not logged in
+  }
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+    <Tabs>
       <Tabs.Screen
-        name="index"
+        name="rn-audiences"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "RN Audiences",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="people" size={28} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="hcp-audiences"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "HCP Audiences",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="medkit" size={28} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="logout"
+        options={{
+          title: "Logout",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="log-out" size={28} color={color} />
+          ),
         }}
       />
     </Tabs>
