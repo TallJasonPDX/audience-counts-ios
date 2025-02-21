@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { API_BASE_URL } from "../constants/api";
 // import { useAuth } from './useAuth'; // REMOVE THIS LINE
 
-export function useApi() {
+export default function useApi() {
     // const { token } = useAuth(); // REMOVE THIS LINE
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);

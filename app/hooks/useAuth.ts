@@ -21,7 +21,7 @@ const AuthContext = createContext<AuthContextProps>({
   loading: true,
 });
 
-export function useAuth() {
+export default function useAuth() {
   return useContext(AuthContext);
 }
 

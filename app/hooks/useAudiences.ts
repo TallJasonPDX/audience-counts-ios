@@ -9,7 +9,7 @@ import {
 
 type AudienceType = "rn" | "hcp";
 
-export function useAudiences(type: AudienceType) {
+export default function useAudiences(type: AudienceType) {
     const { get, post, put, del, isLoading, error } = useApi();
     const [audiences, setAudiences] = useState<
         (MetaUserAudienceResponse | MetaUserHCPAudienceResponse)[]
