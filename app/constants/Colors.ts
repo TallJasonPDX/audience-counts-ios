@@ -1,8 +1,9 @@
+
 // constants/Colors.ts
 const tintColorLight = "#2f95dc";
 const tintColorDark = "#fff";
 
-export default {
+const Colors = {
   light: {
     text: "#000",
     background: "#fff",
@@ -20,3 +21,5 @@ export default {
     icon: "#9BA1A6",
   },
 };
+
+export default Colors;
