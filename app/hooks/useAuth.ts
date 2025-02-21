@@ -7,23 +7,24 @@ import { useApi } from "./useApi";
 interface AuthContextProps {
   user: any | null;
   token: string | null;
-  login: (username: string, password: string) => Promise<void>; // Correct: Promise<void>
-  logout: () => Promise<void>; // Correct: Promise<void>
+  login: (username: string, password: string) => Promise<void>; 
+  logout: () => Promise<void>; 
   loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps>({
   user: null,
   token: null,
-  // Corrected default values:  These must match the interface!
-  login: () => Promise.resolve(), // Resolves immediately
-  logout: () => Promise.resolve(), // Resolves immediately
+  login: () => Promise.resolve(), 
+  logout: () => Promise.resolve(), 
   loading: true,
 });
 
-export default function useAuth() {
+function useAuth() {
   return useContext(AuthContext);
 }
+
+export default useAuth;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any | null>(null);
@@ -36,9 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedToken = await SecureStore.getItemAsync("authToken");
       if (storedToken) {
         setToken(storedToken);
-        // TODO:  Validate token with backend (e.g., call /api/auth/me)
-        // If valid, setUser(userData);
-        // If invalid, setToken(null); and possibly redirect to login
+        
       }
       setLoading(false);
     }
@@ -46,9 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (username: string, password: string) => {
-    // Keep as async
     const response = await post("/auth/token", {
-      // Use the correct endpoint
       username: username,
       password: password,
     });
@@ -58,23 +55,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (newToken) {
       await SecureStore.setItemAsync("authToken", newToken);
       setToken(newToken);
-      // You might want to fetch the user data here, after successful login
-      // const userData = await fetchUserData(newToken); // Implement fetchUserData
-      // setUser(userData);
-      setUser({ username }); // For now, just set the username.  In a real app, fetch user data.
-      router.replace("/rn-audiences"); // Or your desired home route
+      setUser({ username }); 
+      router.replace("/rn-audiences"); 
     } else {
-      throw new Error("Login failed: No token received."); // More specific error
+      throw new Error("Login failed: No token received."); 
     }
   };
 
   const logout = async () => {
-    // Keep as async
     await SecureStore.deleteItemAsync("authToken");
     setToken(null);
     setUser(null);
     router.replace("/login");
   };
 
-  return AuthContext;
+  return (
+    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
