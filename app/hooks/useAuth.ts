@@ -1,4 +1,5 @@
-// hooks/useAuth.ts
+
+/** @jsx React.createElement */
 import React, { useState, useEffect, createContext, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
@@ -7,16 +8,16 @@ import { useApi } from "./useApi";
 interface AuthContextProps {
   user: any | null;
   token: string | null;
-  login: (username: string, password: string) => Promise<void>; 
-  logout: () => Promise<void>; 
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
   loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps>({
   user: null,
   token: null,
-  login: () => Promise.resolve(), 
-  logout: () => Promise.resolve(), 
+  login: () => Promise.resolve(),
+  logout: () => Promise.resolve(),
   loading: true,
 });
 
@@ -37,7 +38,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedToken = await SecureStore.getItemAsync("authToken");
       if (storedToken) {
         setToken(storedToken);
-        
       }
       setLoading(false);
     }
@@ -55,10 +55,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (newToken) {
       await SecureStore.setItemAsync("authToken", newToken);
       setToken(newToken);
-      setUser({ username }); 
-      router.replace("/rn-audiences"); 
+      setUser({ username });
+      router.replace("/rn-audiences");
     } else {
-      throw new Error("Login failed: No token received."); 
+      throw new Error("Login failed: No token received.");
     }
   };
 
@@ -69,9 +69,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.replace("/login");
   };
 
-  return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
-      {children}
-    </AuthContext.Provider>
+  const value = {
+    user,
+    token,
+    login,
+    logout,
+    loading
+  };
+
+  return React.createElement(
+    AuthContext.Provider,
+    { value },
+    children
   );
 }
