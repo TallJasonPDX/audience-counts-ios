@@ -1,7 +1,6 @@
 // components/LoadingIndicator.tsx
 import React from "react";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
-import { Colors } from "@/constants/Colors"; // Assuming you have Colors defined
 
 export function LoadingIndicator() {
   return (

@@ -1,10 +1,10 @@
 // hooks/useApi.ts
 import { useState, useCallback } from "react";
-import { API_BASE_URL } from "@/constants/api";
-import { useAuth } from "./useAuth";
+import { API_BASE_URL } from "../constants/api";
+// import { useAuth } from './useAuth'; // REMOVE THIS LINE
 
 export function useApi() {
-    const { token } = useAuth();
+    // const { token } = useAuth(); // REMOVE THIS LINE
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -13,6 +13,7 @@ export function useApi() {
             method: "GET" | "POST" | "PUT" | "DELETE",
             url: string,
             data?: any,
+            token?: string, // Add token as an optional parameter
         ) => {
             setIsLoading(true);
             setError(null);
@@ -21,6 +22,7 @@ export function useApi() {
                     "Content-Type": "application/json",
                 };
                 if (token) {
+                    // Use the passed-in token
                     headers["Authorization"] = `Bearer ${token}`;
                 }
 
@@ -45,25 +47,29 @@ export function useApi() {
                 setIsLoading(false);
             }
         },
-        [token],
+        [], // No dependency on token anymore
     );
 
     const get = useCallback(
-        (url: string) => makeRequest("GET", url),
+        (url: string, token?: string) =>
+            makeRequest("GET", url, undefined, token), // Pass token
         [makeRequest],
     );
     const post = useCallback(
-        (url: string, data: any) => makeRequest("POST", url, data),
+        (url: string, data: any, token?: string) =>
+            makeRequest("POST", url, data, token), // Pass token
         [makeRequest],
     );
     const put = useCallback(
-        (url: string, data: any) => makeRequest("PUT", url, data),
+        (url: string, data: any, token?: string) =>
+            makeRequest("PUT", url, data, token), // Pass token
         [makeRequest],
     );
     const del = useCallback(
-        (url: string) => makeRequest("DELETE", url),
+        (url: string, token?: string) =>
+            makeRequest("DELETE", url, undefined, token), // Pass token
         [makeRequest],
-    ); // Use 'del' instead of 'delete'
+    );
 
-    return { get, post, put, del, isLoading, error }; // Return 'del'
+    return { get, post, put, del, isLoading, error };
 }
