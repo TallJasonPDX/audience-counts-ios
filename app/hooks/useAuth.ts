@@ -1,5 +1,4 @@
 
-/** @jsx React.createElement */
 import React, { useState, useEffect, createContext, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
@@ -21,11 +20,9 @@ const AuthContext = createContext<AuthContextProps>({
   loading: true,
 });
 
-function useAuth() {
+export function useAuth() {
   return useContext(AuthContext);
 }
-
-export default useAuth;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any | null>(null);
@@ -69,17 +66,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.replace("/login");
   };
 
-  const value = {
-    user,
-    token,
-    login,
-    logout,
-    loading
-  };
-
-  return React.createElement(
-    AuthContext.Provider,
-    { value },
-    children
+  return (
+    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
+
+export default useAuth;
