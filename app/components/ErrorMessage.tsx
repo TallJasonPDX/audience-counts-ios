@@ -6,7 +6,8 @@ interface ErrorMessageProps {
   message: string;
 }
 
-export function ErrorMessage({ message }: ErrorMessageProps) {
+export default function ErrorMessage({ message }: ErrorMessageProps) {
+  // Changed: Added 'export default'
   return <Text style={styles.error}>{message}</Text>;
 }
 

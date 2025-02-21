@@ -1,8 +1,10 @@
 // components/LoadingIndicator.tsx
 import React from "react";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
+import { Colors } from "../constants/Colors";
 
-export function LoadingIndicator() {
+export default function LoadingIndicator() {
+  // Changed: Added 'export default'
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color={Colors.light.tint} />

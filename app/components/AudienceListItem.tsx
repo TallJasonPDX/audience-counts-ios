@@ -13,7 +13,11 @@ interface AudienceListItemProps {
   type: "rn" | "hcp";
 }
 
-export function AudienceListItem({ audience, type }: AudienceListItemProps) {
+export default function AudienceListItem({
+  audience,
+  type,
+}: AudienceListItemProps) {
+  // Changed: Added 'export default'
   const href =
     type === "rn"
       ? `/rn-audiences/${audience.id}`

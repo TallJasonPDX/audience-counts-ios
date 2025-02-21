@@ -20,7 +20,8 @@ interface AudienceFormProps {
     audienceType: "rn" | "hcp";
 }
 
-export function AudienceForm({
+export default function AudienceForm({
+    // Changed: Added 'export default'
     onSubmit,
     initialData,
     audienceType,

@@ -14,7 +14,8 @@ interface AuthFormProps {
   ) => Promise<void>;
 }
 
-export function AuthForm({ type, onSubmit }: AuthFormProps) {
+export default function AuthForm({ type, onSubmit }: AuthFormProps) {
+  // Changed: Added 'export default'
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
