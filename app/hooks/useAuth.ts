@@ -66,10 +66,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.replace("/login");
   };
 
-  return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
-      {children}
-    </AuthContext.Provider>
+  return React.createElement(
+    AuthContext.Provider,
+    { value: { user, token, login, logout, loading } },
+    children
   );
 }
 
