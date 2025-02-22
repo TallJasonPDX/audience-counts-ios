@@ -1,8 +1,9 @@
 
 // app/(auth)/login.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useAuth } from "../hooks/useAuth";
+import { router } from "expo-router";
 import { Link } from "expo-router";
 import ThemedView from "../components/ThemedView";
 import ThemedText from "../components/ThemedText";
@@ -11,7 +12,7 @@ import AuthForm from "../components/AuthForm";
 export default function LoginScreen() {
     const { login, user, loading } = useAuth();
     const [error, setError] = useState("");
-    const router = useRouter();
+    // router is imported directly from expo-router
 
     // Redirect if already logged in
     useEffect(() => {
