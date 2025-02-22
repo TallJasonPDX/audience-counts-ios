@@ -9,10 +9,16 @@ import ThemedText from "../components/ThemedText";
 import AuthForm from "../components/AuthForm";
 
 export default function LoginScreen() {
-    const { login } = useAuth();
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const { login, user, loading } = useAuth();
     const [error, setError] = useState("");
+    const router = useRouter();
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (!loading && user) {
+            router.replace("/(tabs)/");
+        }
+    }, [user, loading]);
 
     const handleLogin = async (username: string, password: string) => {
         try {
@@ -22,6 +28,10 @@ export default function LoginScreen() {
             Alert.alert("Login Failed", e.message);
         }
     };
+
+    if (loading || user) {
+        return null;
+    }
 
     return (
         <ThemedView style={styles.container}>

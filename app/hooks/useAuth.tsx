@@ -81,16 +81,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
-    // Clear both storage types to ensure complete logout
-    if (Platform.OS === 'web') {
-      localStorage.clear(); // Clear all local storage
-      sessionStorage.clear(); // Clear session storage
-    } else {
-      await SecureStore.deleteItemAsync("authToken");
+    try {
+      if (Platform.OS === 'web') {
+        localStorage.clear();
+        sessionStorage.clear();
+      } else {
+        await SecureStore.deleteItemAsync("authToken");
+      }
+      setToken(null);
+      setUser(null);
+      setLoading(false);
+      router.replace("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
     }
-    setToken(null);
-    setUser(null);
-    router.replace("/login");
   };
 
   const value = { user, loading, token, login, logout };
