@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import useApi from "./useApi";
@@ -35,6 +35,14 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
@@ -79,20 +87,9 @@ export function useAuth() {
     router.replace("/");
   };
 
-  return { user, loading, token, login, logout };
-}
+  const value = { user, loading, token, login, logout };
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const auth = useAuth();
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
-}
-
-export function useAuthContext() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuthContext must be used within an AuthProvider");
-  }
-  return context;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export default AuthProvider;
