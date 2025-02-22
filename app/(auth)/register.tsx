@@ -1,10 +1,10 @@
 // app/(auth)/register.tsx
 import { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { useApi } from "../hooks/useApi"; // Import useApi
+import useApi from "../hooks/useApi"; // Import useApi
 import { Link, router } from "expo-router";
-import { ThemedView } from "../components/ThemedView";
-import { ThemedText } from "../components/ThemedText";
+import ThemedView from "../components/ThemedView";
+import ThemedText from "../components/ThemedText";
 
 export default function RegisterScreen() {
     const { post } = useApi(); // Use the useApi hook

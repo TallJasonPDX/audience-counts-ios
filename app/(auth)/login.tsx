@@ -2,8 +2,8 @@ import { useState } from "react";
 import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "expo-router";
-import { ThemedView } from "../components/ThemedView";
-import { ThemedText } from "../components/ThemedText";
+import ThemedView from "../components/ThemedView"; // Changed: Default import
+import ThemedText from "../components/ThemedText"; // Changed: Default import
 import AuthForm from "../components/AuthForm"; // ADD THIS LINE
 
 export default function LoginScreen() {

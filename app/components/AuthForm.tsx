@@ -1,8 +1,8 @@
 // components/AuthForm.tsx
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { ThemedView } from "./ThemedView";
-import { ThemedText } from "./ThemedText";
+import ThemedView from "./ThemedView";
+import ThemedText from "./ThemedText";
 import { Link } from "expo-router";
 
 interface AuthFormProps {
