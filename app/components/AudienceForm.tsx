@@ -10,9 +10,9 @@ import {
     Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { useApi } from "../hooks/useApi";
-import { ThemedView } from "./ThemedView";
-import { ThemedText } from "./ThemedText";
+import useApi from "../hooks/useApi";
+import ThemedView from "./ThemedView";
+import ThemedText from "./ThemedText";
 
 interface AudienceFormProps {
     onSubmit: (audienceData: any) => Promise<void>;

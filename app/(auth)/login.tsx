@@ -25,6 +25,7 @@ export default function LoginScreen() {
 
     return (
         <ThemedView style={styles.container}>
+        <h1>Login Page is Here</h1>
             <AuthForm type="login" onSubmit={handleLogin} />
             <Link href="/register" style={styles.link}>
                 <ThemedText type="link">Register</ThemedText>
