@@ -81,7 +81,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
-    await storage.deleteItemAsync("authToken");
+    // Clear both storage types to ensure complete logout
+    if (Platform.OS === 'web') {
+      localStorage.clear(); // Clear all local storage
+      sessionStorage.clear(); // Clear session storage
+    } else {
+      await SecureStore.deleteItemAsync("authToken");
+    }
     setToken(null);
     setUser(null);
     router.replace("/login");
