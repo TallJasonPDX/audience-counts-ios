@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect, createContext, useContext } from "react";
-import * as SecureStore from "expo-secure-store";
+import SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import useApi from "./useApi";
 
@@ -69,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return React.createElement(
     AuthContext.Provider,
     { value: { user, token, login, logout, loading } },
-    children
+    children,
   );
 }
 
