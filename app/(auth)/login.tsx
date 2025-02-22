@@ -1,10 +1,8 @@
-
 // app/(auth)/login.tsx
 import { useState, useEffect } from "react";
-import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { useAuth } from "../hooks/useAuth";
-import { router } from "expo-router";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import ThemedView from "../components/ThemedView";
 import ThemedText from "../components/ThemedText";
 import AuthForm from "../components/AuthForm";
@@ -13,7 +11,6 @@ export default function LoginScreen() {
     const { login, user, loading } = useAuth();
     const [error, setError] = useState("");
 
-    // Redirect if already logged in
     useEffect(() => {
         if (!loading && user) {
             router.replace("/(tabs)/");
@@ -50,14 +47,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
-    },
-    input: {
-        width: "100%",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        padding: 10,
-        marginBottom: 10,
-        borderRadius: 5,
     },
     link: {
         marginTop: 15,
