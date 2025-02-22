@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await storage.deleteItemAsync("authToken");
     setToken(null);
     setUser(null);
-    router.replace("/");
+    router.replace("/login");
   };
 
   const value = { user, loading, token, login, logout };
