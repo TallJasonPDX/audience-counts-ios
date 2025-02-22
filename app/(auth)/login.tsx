@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "expo-router";
 import { ThemedView } from "../components/ThemedView";
 import { ThemedText } from "../components/ThemedText";
+import AuthForm from "../components/AuthForm"; // ADD THIS LINE
 
 export default function LoginScreen() {
     const { login } = useAuth();
@@ -12,35 +12,9 @@ export default function LoginScreen() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleLogin = async () => {
-        try {
-            await login(username, password);
-        } catch (e: any) {
-            setError(e.message || "Login failed");
-            Alert.alert("Login Failed", e.message || "Login failed");
-        }
-    };
-
     return (
         <ThemedView style={styles.container}>
-            <ThemedText type="title">Login</ThemedText>
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                autoCapitalize="none"
-            />
-            <Button title="Login" onPress={handleLogin} />
+            <AuthForm type="login" onSubmit={login} />
             <Link href="/register" style={styles.link}>
                 <ThemedText type="link">Register</ThemedText>
             </Link>

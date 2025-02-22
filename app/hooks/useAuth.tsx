@@ -1,9 +1,8 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import useApi from "./useApi";
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 
 const webStorage = {
   async getItemAsync(key: string) {
@@ -17,7 +16,7 @@ const webStorage = {
   },
 };
 
-const storage = Platform.OS === 'web' ? webStorage : SecureStore;
+const storage = Platform.OS === "web" ? webStorage : SecureStore;
 
 type User = {
   id: string;
@@ -57,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedToken = await storage.getItemAsync("authToken");
       if (storedToken) {
         setToken(storedToken);
-        setUser({ id: '1', username: 'user' });
+        setUser({ id: "1", username: "user" });
       }
     } catch (error) {
       console.error("Error loading token:", error);
@@ -72,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const newToken = response.token;
       await storage.setItemAsync("authToken", newToken);
       setToken(newToken);
-      setUser({ id: '1', username });
+      setUser({ id: "1", username });
       router.replace("/(tabs)");
     } catch (error) {
       console.error("Login failed:", error);
