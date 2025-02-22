@@ -1,6 +1,6 @@
-// app/(auth)/login.tsx
+
 import { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "expo-router";
 import { ThemedView } from "../components/ThemedView";
@@ -15,10 +15,9 @@ export default function LoginScreen() {
     const handleLogin = async () => {
         try {
             await login(username, password);
-            // No need to navigate here; useAuth handles it
         } catch (e: any) {
             setError(e.message || "Login failed");
-            Alert.alert("Login Failed", e.message || "Login failed"); // Use Alert for errors
+            Alert.alert("Login Failed", e.message || "Login failed");
         }
     };
 
