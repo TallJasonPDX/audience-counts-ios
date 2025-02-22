@@ -1,6 +1,6 @@
 // hooks/useAudiences.ts
 import { useState, useCallback, useEffect } from "react";
-import useApi from "./useApi";
+import { useApi } from "./useApi";
 import {
     AudienceCreate,
     MetaUserAudienceResponse,

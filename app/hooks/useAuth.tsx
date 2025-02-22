@@ -67,34 +67,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (username: string, password: string) => {
     try {
-      console.log("Login called with:", { username, password }); // Log the values
-      const response = await api.post("/auth/token", { username, password });
-      const newToken = response.access_token;
+      // CHANGE THIS LINE:
+      const response = await api.post("/auth/token", { username, password }); // Correct endpoint
+      const newToken = response.access_token; // Use response.access_token
       await storage.setItemAsync("authToken", newToken);
       setToken(newToken);
-      setUser({ id: "1", username });
+      setUser({ id: "1", username }); // Set user after successful login
       router.replace("/(tabs)");
     } catch (error) {
       console.error("Login failed:", error);
-      throw error;
+      throw error; // Re-throw to be caught by AuthForm
     }
   };
 
   const logout = async () => {
-    try {
-      if (Platform.OS === 'web') {
-        localStorage.clear();
-        sessionStorage.clear();
-      } else {
-        await SecureStore.deleteItemAsync("authToken");
-      }
-      setToken(null);
-      setUser(null);
-      setLoading(false);
-      router.replace("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
+    await storage.deleteItemAsync("authToken");
+    setToken(null);
+    setUser(null);
+    router.replace("/");
   };
 
   const value = { user, loading, token, login, logout };

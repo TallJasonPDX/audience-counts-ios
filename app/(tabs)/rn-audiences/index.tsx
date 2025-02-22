@@ -1,9 +1,9 @@
 // app/(tabs)/rn-audiences/index.tsx
 import { View, Text, FlatList, Button, StyleSheet } from "react-native";
-import useAudiences from "../../hooks/useAudiences"; // Use the new hook
+import { useAudiences } from "../../hooks/useAudiences"; // Use the new hook
 import { Link, router } from "expo-router";
-import ThemedView from "../../components/ThemedView";
-import ThemedText from "../../components/ThemedText";
+import { ThemedView } from "../../components/ThemedView";
+import { ThemedText } from "../../components/ThemedText";
 import { useEffect } from "react";
 
 export default function RNAudiencesScreen() {

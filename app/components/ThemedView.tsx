@@ -11,7 +11,7 @@ export default function ThemedView({
   style,
   lightColor,
   darkColor,
-  
+  ...otherProps
 }: ThemedViewProps) {
   // Changed: Added 'export default'
   const backgroundColor = useThemeColor(
@@ -19,5 +19,5 @@ export default function ThemedView({
     "background",
   );
 
-  return <View style={[{ backgroundColor }, style]}  />;
+  return <View style={[{ backgroundColor }, style]} {...otherProps} />;
 }
