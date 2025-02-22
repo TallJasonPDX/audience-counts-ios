@@ -34,7 +34,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function useAuth() {
+function useAuthHook() {
   const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
@@ -81,6 +81,9 @@ export function useAuth() {
 
   return { user, loading, token, login, logout };
 }
+
+export const useAuth = useAuthHook;
+export default useAuthHook;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useAuth();
