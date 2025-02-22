@@ -2,7 +2,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
-import { useApi } from "./useApi";
+import useApi from "./useApi";
 
 interface AuthContextProps {
   user: any | null;
