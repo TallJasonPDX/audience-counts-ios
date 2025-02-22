@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import useApi from "./useApi";
 import { Platform } from 'react-native';
 
+// Web fallback
 const webStorage = {
   async getItemAsync(key: string) {
     return localStorage.getItem(key);
@@ -17,16 +18,10 @@ const webStorage = {
   },
 };
 
+// Use SecureStore for native platforms, localStorage for web
 const storage = Platform.OS === 'web' ? webStorage : SecureStore;
 
-type User = {
-  id: string;
-  username: string;
-} | null;
-
 interface AuthContextType {
-  user: User;
-  loading: boolean;
   token: string | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -34,29 +29,21 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export default function useAuth() {
-  const [user, setUser] = useState<User>(null);
-  const [loading, setLoading] = useState(true);
+export const useAuth = () => {
   const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const api = useApi();
 
   useEffect(() => {
-    loadToken();
-  }, []);
-
-  const loadToken = async () => {
-    try {
+    async function loadToken() {
       const storedToken = await storage.getItemAsync("authToken");
       if (storedToken) {
         setToken(storedToken);
-        setUser({ id: '1', username: 'user' }); // Set user data based on token
       }
-    } catch (error) {
-      console.error("Error loading token:", error);
-    } finally {
-      setLoading(false);
     }
-  };
+    loadToken();
+  }, []);
 
   const login = async (username: string, password: string) => {
     try {
@@ -64,7 +51,6 @@ export default function useAuth() {
       const newToken = response.token;
       await storage.setItemAsync("authToken", newToken);
       setToken(newToken);
-      setUser({ id: '1', username }); // Set user data based on login response
       router.replace("/(tabs)");
     } catch (error) {
       console.error("Login failed:", error);
@@ -75,16 +61,19 @@ export default function useAuth() {
   const logout = async () => {
     await storage.deleteItemAsync("authToken");
     setToken(null);
-    setUser(null);
     router.replace("/");
   };
 
-  return { user, loading, token, login, logout };
+  return { token, login, logout };
 }
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+type AuthProviderProps = {
+  children: React.ReactNode;
+};
+
+export function AuthProvider({ children }: AuthProviderProps) {
   const auth = useAuth();
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  return React.createElement(AuthContext.Provider, { value: auth }, children);
 }
 
 export function useAuthContext() {
