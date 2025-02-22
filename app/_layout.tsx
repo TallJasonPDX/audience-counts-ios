@@ -23,6 +23,12 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
+      console.log("Fonts loaded");
+    }
+  }, [loaded]);
+
+  useEffect(() => {
+    if (loaded) {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
@@ -32,12 +38,14 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <AuthProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
+    </AuthProvider>
   );
 }
