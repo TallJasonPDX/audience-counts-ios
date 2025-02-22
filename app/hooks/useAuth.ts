@@ -29,8 +29,10 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function useAuth() {
+export const useAuth = () => {
   const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const api = useApi();
 
   useEffect(() => {
