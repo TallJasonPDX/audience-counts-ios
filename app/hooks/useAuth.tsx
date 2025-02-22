@@ -67,16 +67,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (username: string, password: string) => {
     try {
-      // CHANGE THIS LINE:
-      const response = await api.post("/auth/token", { username, password }); // Correct endpoint
-      const newToken = response.access_token; // Use response.access_token
+      console.log("Login called with:", { username, password }); // Log the values
+      const response = await api.post("/auth/token", { username, password });
+      const newToken = response.access_token;
       await storage.setItemAsync("authToken", newToken);
       setToken(newToken);
-      setUser({ id: "1", username }); // Set user after successful login
+      setUser({ id: "1", username });
       router.replace("/(tabs)");
     } catch (error) {
       console.error("Login failed:", error);
-      throw error; // Re-throw to be caught by AuthForm
+      throw error;
     }
   };
 
