@@ -12,7 +12,6 @@ import AuthForm from "../components/AuthForm";
 export default function LoginScreen() {
     const { login, user, loading } = useAuth();
     const [error, setError] = useState("");
-    // router is imported directly from expo-router
 
     // Redirect if already logged in
     useEffect(() => {
@@ -36,7 +35,7 @@ export default function LoginScreen() {
 
     return (
         <ThemedView style={styles.container}>
-            <ThemedText type="title">Login Page</ThemedText>
+            <ThemedText type="title">Login</ThemedText>
             <AuthForm type="login" onSubmit={handleLogin} />
             <Link href="/register" style={styles.link}>
                 <ThemedText type="link">Register</ThemedText>
