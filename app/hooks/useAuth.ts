@@ -1,75 +1,73 @@
+
 import React, { useState, useEffect, createContext, useContext } from "react";
-import SecureStore from "expo-secure-store";
+import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import useApi from "./useApi";
+import { Platform } from 'react-native';
 
-interface AuthContextProps {
-  user: any | null;
-  token: string | null;
-  login: (username: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  loading: boolean;
-}
+// Web fallback
+const webStorage = {
+  async getItemAsync(key: string) {
+    return localStorage.getItem(key);
+  },
+  async setItemAsync(key: string, value: string) {
+    return localStorage.setItem(key, value);
+  },
+  async deleteItemAsync(key: string) {
+    return localStorage.removeItem(key);
+  },
+};
 
-const AuthContext = createContext<AuthContextProps>({
-  user: null,
-  token: null,
-  login: () => Promise.resolve(),
-  logout: () => Promise.resolve(),
-  loading: true,
-});
+// Use SecureStore for native platforms, localStorage for web
+const storage = Platform.OS === 'web' ? webStorage : SecureStore;
 
 export function useAuth() {
-  return useContext(AuthContext);
-}
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const { post } = useApi();
+  const api = useApi();
 
   useEffect(() => {
     async function loadToken() {
-      const storedToken = await SecureStore.getItemAsync("authToken");
+      const storedToken = await storage.getItemAsync("authToken");
       if (storedToken) {
         setToken(storedToken);
       }
-      setLoading(false);
     }
     loadToken();
   }, []);
 
   const login = async (username: string, password: string) => {
-    const response = await post("/auth/token", {
-      username: username,
-      password: password,
-    });
-
-    const newToken = response.access_token;
-
-    if (newToken) {
-      await SecureStore.setItemAsync("authToken", newToken);
+    try {
+      const response = await api.post("/auth/login", { username, password });
+      const newToken = response.token;
+      await storage.setItemAsync("authToken", newToken);
       setToken(newToken);
-      setUser({ username });
-      router.replace("/rn-audiences");
-    } else {
-      throw new Error("Login failed: No token received.");
+      router.replace("/(tabs)");
+    } catch (error) {
+      console.error("Login failed:", error);
+      throw error;
     }
   };
 
   const logout = async () => {
-    await SecureStore.deleteItemAsync("authToken");
+    await storage.deleteItemAsync("authToken");
     setToken(null);
-    setUser(null);
-    router.replace("/login");
+    router.replace("/");
   };
 
-  return React.createElement(
-    AuthContext.Provider,
-    { value: { user, token, login, logout, loading } },
-    children,
-  );
+  return { token, login, logout };
 }
 
-export default useAuth;
+const AuthContext = createContext<ReturnType<typeof useAuth> | null>(null);
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const auth = useAuth();
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+}
+
+export function useAuthContext() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuthContext must be used within an AuthProvider");
+  }
+  return context;
+}
