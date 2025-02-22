@@ -21,6 +21,14 @@ const webStorage = {
 // Use SecureStore for native platforms, localStorage for web
 const storage = Platform.OS === 'web' ? webStorage : SecureStore;
 
+interface AuthContextType {
+  token: string | null;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
 export function useAuth() {
   const [token, setToken] = useState<string | null>(null);
   const api = useApi();
@@ -57,11 +65,13 @@ export function useAuth() {
   return { token, login, logout };
 }
 
-const AuthContext = createContext<ReturnType<typeof useAuth> | null>(null);
+type AuthProviderProps = {
+  children: React.ReactNode;
+};
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: AuthProviderProps) {
   const auth = useAuth();
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  return React.createElement(AuthContext.Provider, { value: auth }, children);
 }
 
 export function useAuthContext() {
