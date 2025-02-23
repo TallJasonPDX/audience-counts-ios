@@ -1,6 +1,7 @@
 // hooks/useAudiences.ts
 import { useState, useCallback, useEffect } from "react";
 import useApi from "./useApi";
+import { useAuth } from "./useAuth";
 import {
     AudienceCreate,
     MetaUserAudienceResponse,
@@ -11,6 +12,7 @@ type AudienceType = "rn" | "hcp";
 
 export default function useAudiences(type: AudienceType) {
     const { get, post, put, del, isLoading, error } = useApi();
+    const { token } = useAuth();
     const [audiences, setAudiences] = useState<
         (MetaUserAudienceResponse | MetaUserHCPAudienceResponse)[]
     >([]);
@@ -19,7 +21,7 @@ export default function useAudiences(type: AudienceType) {
         const endpoint =
             type === "rn" ? "/user_audiences" : "/user_hcp_audiences";
         try {
-            const response = await get(`/meta${endpoint}`);
+            const response = await get(`/meta${endpoint}`, token);
             setAudiences(response.data);
         } catch (error) {
             console.error("Failed to fetch audiences:", error);
@@ -32,7 +34,7 @@ export default function useAudiences(type: AudienceType) {
             const endpoint =
                 type === "rn" ? "/user_audiences" : "/user_hcp_audiences";
             try {
-                const response = await post(`/meta${endpoint}`, audienceData);
+                const response = await post(`/meta${endpoint}`, audienceData, token);
                 // Assuming the backend returns the created audience
                 return response; // Return the created audience
             } catch (error) {
@@ -51,7 +53,7 @@ export default function useAudiences(type: AudienceType) {
                     ? `/user_audiences/${audienceId}`
                     : `/user_hcp_audiences/${audienceId}`;
             try {
-                const response = await put(endpoint, audienceData);
+                const response = await put(endpoint, audienceData, token);
                 // Optionally, refresh the audience list or update the local state
                 return response;
             } catch (error) {
@@ -69,7 +71,7 @@ export default function useAudiences(type: AudienceType) {
                     ? `/user_audiences/${audience_id}`
                     : `/user_hcp_audiences/${audience_id}`;
             try {
-                await del(endpoint);
+                await del(endpoint, token);
                 // Optionally, refresh the audience list or update the local state
             } catch (error) {
                 console.error("Failed to delete audience:", error);
@@ -87,7 +89,7 @@ export default function useAudiences(type: AudienceType) {
                     : `/user_hcp_audiences/${audienceId}/count`;
 
             try {
-                const response = await post(endpoint); // Assuming a POST request
+                const response = await post(endpoint, undefined, token); // Assuming a POST request
                 return response.count; // Adjust based on your API response structure
             } catch (error) {
                 console.error("Failed to get audience count:", error);
