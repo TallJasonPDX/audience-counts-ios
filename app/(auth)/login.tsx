@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "expo-router";
-import ThemedView from "../components/ThemedView";
-import ThemedText from "../components/ThemedText";
-import AuthForm from "../components/AuthForm";
+import ThemedView from "../components/ThemedView"; // Changed: Default import
+import ThemedText from "../components/ThemedText"; // Changed: Default import
+import AuthForm from "../components/AuthForm"; // ADD THIS LINE
 
 export default function LoginScreen() {
     const { login } = useAuth();
@@ -13,18 +12,9 @@ export default function LoginScreen() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleLogin = async () => {
-        try {
-            await login(username, password);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "An error occurred during login");
-        }
-    };
-
     return (
         <ThemedView style={styles.container}>
-            {error ? <ThemedText style={styles.error}>{error}</ThemedText> : null}
-            <AuthForm type="login" onSubmit={handleLogin} />
+            <AuthForm type="login" onSubmit={login} />
             <Link href="/register" style={styles.link}>
                 <ThemedText type="link">Register</ThemedText>
             </Link>
@@ -50,8 +40,4 @@ const styles = StyleSheet.create({
     link: {
         marginTop: 15,
     },
-    error: {
-        color: 'red',
-        marginBottom: 10,
-    }
 });
