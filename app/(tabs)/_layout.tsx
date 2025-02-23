@@ -1,6 +1,6 @@
 // app/(tabs)/_layout.tsx
 import { Tabs } from "expo-router";
-import { IconSymbol } from "@/components/ui/IconSymbol"; // Assuming you have this
+import { IconSymbol } from "../components/ui/IconSymbol"; // Assuming you have this
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { router } from "expo-router";

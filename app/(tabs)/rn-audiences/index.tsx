@@ -1,13 +1,13 @@
-
 import { View, Text, FlatList, Button, StyleSheet } from "react-native";
-import useAudiences from "../../../hooks/useAudiences";
+import useAudiences from "../../hooks/useAudiences";
 import { Link, router } from "expo-router";
-import ThemedView from "../../../components/ThemedView";
-import ThemedText from "../../../components/ThemedText";
+import ThemedView from "../../components/ThemedView";
+import ThemedText from "../../components/ThemedText";
 import { useEffect } from "react";
 
 export default function RNAudiencesScreen() {
-    const { audiences, isLoading, error, refreshAudiences } = useAudiences("rn");
+    const { audiences, isLoading, error, refreshAudiences } =
+        useAudiences("rn");
 
     useEffect(() => {
         refreshAudiences();
