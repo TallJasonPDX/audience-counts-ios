@@ -9,12 +9,12 @@ import {
     ScrollView,
     Alert,
 } from "react-native";
-import { useAudiences } from "../../hooks/useAudiences";
+import useAudiences from "../../hooks/useAudiences";
 import { router } from "expo-router";
-import { ThemedView } from "../../components/ThemedView";
-import { ThemedText } from "../../components/ThemedText";
+import ThemedView from "../../components/ThemedView";
+import ThemedText from "../../components/ThemedText";
 import { Picker } from "@react-native-picker/picker"; // For dropdowns
-import { useApi } from "../../hooks/useApi"; // Import useApi
+import useApi from "../../hooks/useApi"; // Import useApi
 
 export default function CreateHCPAudienceScreen() {
     const { createAudience, isLoading, error } = useAudiences("hcp"); // Use 'hcp'

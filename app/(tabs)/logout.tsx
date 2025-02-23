@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { router } from "expo-router";
 import { useAuth } from "../hooks/useAuth";
 import { View, Text, ActivityIndicator } from "react-native";
-import { ThemedView } from "../components/ThemedView";
+import ThemedView from "../components/ThemedView";
 
 export default function LogoutScreen() {
   const { logout } = useAuth();

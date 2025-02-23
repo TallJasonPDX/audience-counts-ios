@@ -2,9 +2,9 @@
 import { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
-import { useAudiences } from "../../hooks/useAudiences";
-import { ThemedView } from "../../components/ThemedView";
-import { ThemedText } from "../../components/ThemedText";
+import useAudiences from "../../hooks/useAudiences";
+import ThemedView from "../../components/ThemedView";
+import ThemedText from "../../components/ThemedText";
 
 export default function HCPAudienceDetailScreen() {
     const { id } = useLocalSearchParams();
