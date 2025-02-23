@@ -1,4 +1,5 @@
 
+// Type definitions
 export interface AudienceCreate {
     name: string;
     description?: string | null;
@@ -40,12 +41,11 @@ export interface MetaUserHCPAudienceResponse {
     user_id: number;
 }
 
-const schemas = {
+// Simply export all types, no need for a default export of types as values
+export type { 
     AudienceCreate,
     AudienceFilters,
     ZipRegion,
     MetaUserAudienceResponse,
-    MetaUserHCPAudienceResponse,
+    MetaUserHCPAudienceResponse 
 };
-
-export default schemas;
