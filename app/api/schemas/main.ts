@@ -39,3 +39,13 @@ export interface MetaUserHCPAudienceResponse {
     filters: AudienceFilters | null;
     user_id: number;
 }
+
+const schemas = {
+    AudienceCreate,
+    AudienceFilters,
+    ZipRegion,
+    MetaUserAudienceResponse,
+    MetaUserHCPAudienceResponse,
+};
+
+export default schemas;
