@@ -1,4 +1,3 @@
-
 // Type definitions
 export interface AudienceCreate {
     name: string;
@@ -42,10 +41,4 @@ export interface MetaUserHCPAudienceResponse {
 }
 
 // Simply export all types, no need for a default export of types as values
-export type { 
-    AudienceCreate,
-    AudienceFilters,
-    ZipRegion,
-    MetaUserAudienceResponse,
-    MetaUserHCPAudienceResponse 
-};
+export default {};
