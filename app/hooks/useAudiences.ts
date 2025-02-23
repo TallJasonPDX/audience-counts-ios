@@ -5,7 +5,7 @@ import {
     AudienceCreate,
     MetaUserAudienceResponse,
     MetaUserHCPAudienceResponse,
-} from "@/api/schemas/main"; // Import Pydantic models
+} from "../api/schemas/main"; // Import Pydantic models
 
 type AudienceType = "rn" | "hcp";
 
