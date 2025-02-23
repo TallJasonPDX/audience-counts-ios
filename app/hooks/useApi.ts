@@ -47,9 +47,8 @@ export default function useApi() {
                 console.log(`  Method: ${method}`);
                 console.log(`  URL: ${fullUrl}`);
                 console.log(`  Headers:`, headers);
-                console.log(`  Body:`, body.toString());
-                console.log(`  Data.username:`, data.username.toString());
-                console.log(`  Data.password:`, data.password.toString());
+                console.log(`  Body:`, body ? body.toString() : 'undefined');
+                console.log(`  Data:`, data ? JSON.stringify(data) : 'undefined');
 
                 const response = await fetch(fullUrl, {
                     method,
