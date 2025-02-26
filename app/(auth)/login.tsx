@@ -1,5 +1,5 @@
 // app/(auth)/login.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -10,17 +10,25 @@ import {
   Alert,
 } from "react-native";
 import { useAuth } from "../hooks/useAuth";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import Button from "../components/Button";
 import Input from "../components/Input";
 
 export default function LoginScreen() {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  // Redirect to tabs if already logged in
+  useEffect(() => {
+    if (user) {
+      console.log("User already logged in, redirecting to dashboard");
+      router.replace("/(tabs)");
+    }
+  }, [user]);
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -31,7 +39,14 @@ export default function LoginScreen() {
     try {
       setIsLoading(true);
       setErrorMsg("");
+      console.log("Login button pressed, attempting login...");
       await login(username, password);
+
+      // Clear form fields after successful login
+      setUsername("");
+      setPassword("");
+
+      // Handle navigation in useAuth hook
     } catch (e: any) {
       setErrorMsg(e.message || "Login failed. Please check your credentials.");
       Alert.alert(

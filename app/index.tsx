@@ -1,22 +1,20 @@
 // app/index.tsx
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { StyleSheet } from "react-native";
-import { router, Redirect } from "expo-router";
+import { Redirect } from "expo-router";
 import { useAuth } from "./hooks/useAuth";
-import ThemedView from "./components/ThemedView";
-import ThemedText from "./components/ThemedText";
 import LoadingIndicator from "./components/LoadingIndicator";
 
 export default function Index() {
   const { user, loading } = useAuth();
+  const hasRedirected = useRef(false);
 
   // Show loading indicator while checking authentication
   if (loading) {
     return <LoadingIndicator message="Loading Audience Synergy..." />;
   }
 
-  // Instead of programmatic navigation with hooks, use Redirect component
-  // This is more reliable in Expo Router
+  // Use Redirect component instead of programmatic navigation
   if (user) {
     return <Redirect href="/(tabs)" />;
   } else {

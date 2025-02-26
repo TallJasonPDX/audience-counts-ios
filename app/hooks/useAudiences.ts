@@ -21,10 +21,12 @@ export default function useAudiences(type: AudienceType) {
 
     // Use a ref to track if we've already fetched data
     const initialFetchDone = useRef(false);
+    // Add another ref to track if component is mounted
+    const isMounted = useRef(true);
 
     const fetchAudiences = useCallback(async () => {
-        // Skip if no token yet
-        if (!token) return;
+        // Skip if no token yet or if we're already loading
+        if (!token || isLoading) return;
 
         setIsLoading(true);
         setError(null);
@@ -34,16 +36,23 @@ export default function useAudiences(type: AudienceType) {
                 type === "rn" ? "/user_audiences" : "/user_hcp_audiences";
             const response = await get(`/meta${endpoint}`, token);
 
-            if (response && response.data) {
-                setAudiences(response.data);
-            } else {
-                setAudiences([]);
+            // Only update state if the component is still mounted
+            if (isMounted.current) {
+                if (response && response.data) {
+                    setAudiences(response.data);
+                } else {
+                    setAudiences([]);
+                }
             }
         } catch (error: any) {
             console.error(`Failed to fetch ${type} audiences:`, error);
-            setError(error.message || `Failed to load ${type} audiences`);
+            if (isMounted.current) {
+                setError(error.message || `Failed to load ${type} audiences`);
+            }
         } finally {
-            setIsLoading(false);
+            if (isMounted.current) {
+                setIsLoading(false);
+            }
         }
     }, [get, type, token]);
 
@@ -174,6 +183,11 @@ export default function useAudiences(type: AudienceType) {
             initialFetchDone.current = true;
             fetchAudiences();
         }
+
+        // Cleanup function to set isMounted to false when component unmounts
+        return () => {
+            isMounted.current = false;
+        };
     }, [token, fetchAudiences]);
 
     return {

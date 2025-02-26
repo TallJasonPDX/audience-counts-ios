@@ -1,19 +1,19 @@
 // app/(tabs)/_layout.tsx
 import { Tabs } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { router } from "expo-router";
-import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../hooks/useAuth";
 import LoadingIndicator from "../components/LoadingIndicator";
 
 export default function TabLayout() {
   const { user, loading } = useAuth();
+  const hasRedirected = useRef(false);
 
-  // Redirect to login if not authenticated
+  // Redirect to login if not authenticated - but only once
   useEffect(() => {
-    if (!loading && !user) {
-      // Only redirect if we've checked auth state and user is not logged in
+    if (!loading && !user && !hasRedirected.current) {
+      hasRedirected.current = true;
       router.replace("/(auth)/login");
     }
   }, [user, loading]);
@@ -30,18 +30,28 @@ export default function TabLayout() {
 
   // User is authenticated, render the tab navigator
   return (
-    <Tabs screenOptions={{ 
-      headerShown: false,
-      tabBarLabelStyle: {
-        fontSize: 12,
-        marginBottom: 4,
-      }
-    }}>
+    <Tabs 
+      screenOptions={{ 
+        headerShown: false,
+        tabBarLabelStyle: {
+          fontSize: 12,
+          marginBottom: 4,
+        }
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="home" size={28} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="rn-audiences/index"
         options={{
           title: "RN Audiences",
-          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons name="people" size={28} color={color} />
           ),
@@ -51,7 +61,6 @@ export default function TabLayout() {
         name="hcp-audiences/index"
         options={{
           title: "HCP Audiences",
-          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons name="medkit" size={28} color={color} />
           ),
@@ -61,7 +70,6 @@ export default function TabLayout() {
         name="logout"
         options={{
           title: "Logout",
-          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons name="log-out" size={28} color={color} />
           ),

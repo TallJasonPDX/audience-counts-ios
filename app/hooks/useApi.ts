@@ -1,10 +1,11 @@
 // hooks/useApi.ts
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { API_BASE_URL } from "../constants/api";
 
 export default function useApi() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const pendingRequests = useRef(new Map());
 
     const makeRequest = useCallback(
         async (
@@ -13,67 +14,80 @@ export default function useApi() {
             data?: any,
             token?: string,
         ) => {
+            // Create a unique request key
+            const requestKey = `${method}:${url}:${JSON.stringify(data || {})}`;
+
+            // Check if this exact request is already in progress
+            if (pendingRequests.current.has(requestKey)) {
+                console.log(`Request already in progress: ${requestKey}`);
+                return pendingRequests.current.get(requestKey);
+            }
+
             setIsLoading(true);
             setError(null);
-            try {
-                const headers: HeadersInit = {};
-                if (token) {
-                    headers["Authorization"] = `Bearer ${token}`;
-                }
 
-                let body = undefined;
-                if (data) {
-                    if (url === "/auth/token") {
-                        // Correctly use data.username and data.password
-                        const formData = new URLSearchParams();
-                        formData.append("grant_type", "password");
-                        formData.append("username", data.username); // Use data.username
-                        formData.append("password", data.password); // Use data.password
-                        formData.append("scope", "");
-                        formData.append("client_id", "");
-                        formData.append("client_secret", "");
-
-                        body = formData;
-                        headers["Content-Type"] =
-                            "application/x-www-form-urlencoded";
-                    } else {
-                        body = JSON.stringify(data);
-                        headers["Content-Type"] = "application/json";
+            const requestPromise = (async () => {
+                try {
+                    const headers: HeadersInit = {};
+                    if (token) {
+                        headers["Authorization"] = `Bearer ${token}`;
                     }
+
+                    let body = undefined;
+                    if (data) {
+                        if (url === "/auth/token") {
+                            // Correctly use data.username and data.password
+                            const formData = new URLSearchParams();
+                            formData.append("grant_type", "password");
+                            formData.append("username", data.username);
+                            formData.append("password", data.password);
+                            formData.append("scope", "");
+                            formData.append("client_id", "");
+                            formData.append("client_secret", "");
+
+                            body = formData;
+                            headers["Content-Type"] =
+                                "application/x-www-form-urlencoded";
+                        } else {
+                            body = JSON.stringify(data);
+                            headers["Content-Type"] = "application/json";
+                        }
+                    }
+
+                    const fullUrl = API_BASE_URL + url;
+
+                    // Make the actual API call
+                    const response = await fetch(fullUrl, {
+                        method,
+                        headers,
+                        body,
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(
+                            errorData.detail ||
+                                `API Error: ${response.statusText}`,
+                        );
+                    }
+
+                    const responseData = await response.json();
+                    return responseData;
+                } catch (e: any) {
+                    console.error("API Request Failed:", e);
+                    setError(e.message || "An unexpected error occurred.");
+                    throw e;
+                } finally {
+                    setIsLoading(false);
+                    // Remove this request from pending requests
+                    pendingRequests.current.delete(requestKey);
                 }
+            })();
 
-                const fullUrl = API_BASE_URL + url;
-                console.log("API Request:");
-                console.log(`  Method: ${method}`);
-                console.log(`  URL: ${fullUrl}`);
-                console.log(`  Headers:`, headers);
-                console.log(`  Body:`, body ? body.toString() : 'undefined');
-                console.log(`  Data:`, data ? JSON.stringify(data) : 'undefined');
+            // Store the promise in our pending requests map
+            pendingRequests.current.set(requestKey, requestPromise);
 
-                const response = await fetch(fullUrl, {
-                    method,
-                    headers,
-                    body,
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.log("API Response (Error):", errorData);
-                    throw new Error(
-                        errorData.detail || `API Error: ${response.statusText}`,
-                    );
-                }
-
-                const responseData = await response.json();
-                console.log("API Response (Success):", responseData);
-                return responseData;
-            } catch (e: any) {
-                console.error("API Request Failed:", e);
-                setError(e.message || "An unexpected error occurred.");
-                throw e;
-            } finally {
-                setIsLoading(false);
-            }
+            return requestPromise;
         },
         [],
     );

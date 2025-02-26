@@ -1,78 +1,74 @@
-import { Image, StyleSheet, Platform } from "react-native";
-
+// app/(tabs)/index.tsx
+import { StyleSheet } from "react-native";
 import HelloWave from "../components/HelloWave";
-import ParallaxScrollView from "../components/ParallaxScrollView";
 import ThemedText from "../components/ThemedText";
 import ThemedView from "../components/ThemedView";
+import Colors from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
+import { useAuth } from "../hooks/useAuth";
 
-export default function HomeScreen() {
+export default function TabIndexScreen() {
+  const { user } = useAuth();
+  const colorScheme = useColorScheme() || "light";
+  const colors = Colors[colorScheme];
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#FFFFFF", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/as-tagline.jpg")}
-          style={styles.reactLogo}
-        />
-      }
-    >
+    <ThemedView style={styles.container}>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Audience Synergy</ThemedText>
         <HelloWave />
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: "cmd + d",
-              android: "cmd + m",
-              web: "F12",
-            })}
-          </ThemedText>{" "}
-          to open developer tools.
+
+      <ThemedText style={styles.welcomeText}>
+        Welcome back, {user?.username || "User"}!
+      </ThemedText>
+
+      <ThemedView style={styles.card}>
+        <ThemedText type="subtitle">Dashboard Overview</ThemedText>
+        <ThemedText style={styles.cardText}>
+          Use the tabs below to manage your RN and HCP audiences.
         </ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this
-          starter app.
+
+      <ThemedView style={styles.card}>
+        <ThemedText type="subtitle">Quick Tips</ThemedText>
+        <ThemedText style={styles.cardText}>
+          • Create separate audiences for RN and HCP targets
+        </ThemedText>
+        <ThemedText style={styles.cardText}>
+          • Use geographic filters to target specific regions
+        </ThemedText>
+        <ThemedText style={styles.cardText}>
+          • Combine specialties and states for precision targeting
         </ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{" "}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText>{" "}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{" "}
-          directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 3,
     marginBottom: 20,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  welcomeText: {
+    fontSize: 18,
+    marginBottom: 24,
   },
-  reactLogo: {
-    width: "80%",
-    height: 200, // Still explicitly set the height
-    resizeMode: "contain",
-    alignSelf: "center",
+  card: {
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
   },
+  cardText: {
+    marginTop: 8,
+  }
 });

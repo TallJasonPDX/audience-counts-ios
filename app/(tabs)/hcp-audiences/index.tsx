@@ -1,6 +1,6 @@
 // app/(tabs)/hcp-audiences/index.tsx
-import { useRef } from "react";
-import { StyleSheet, FlatList, View, TouchableOpacity } from "react-native";
+import { useRef, useEffect } from "react";
+import { StyleSheet, FlatList, View } from "react-native";
 import useAudiences from "../../hooks/useAudiences";
 import { router } from "expo-router";
 import ThemedView from "../../components/ThemedView";
@@ -16,17 +16,20 @@ import AudienceListItem from "../../components/AudienceListItem";
 export default function HCPAudiencesScreen() {
     const colorScheme = useColorScheme() || "light";
     const colors = Colors[colorScheme];
-    const { audiences, isLoading, error, refreshAudiences } =
-        useAudiences("hcp");
+    const { audiences, isLoading, error, refreshAudiences } = useAudiences("hcp");
+    const initialLoadComplete = useRef(false);
     const manualRefreshRef = useRef(false);
 
-    // Only manually trigger refresh when component mounts or user explicitly requests it
+    // Handle refresh - explicitly setting manual refresh flag
     const handleRefresh = () => {
         manualRefreshRef.current = true;
         refreshAudiences();
     };
 
-    // We removed the useEffect that was causing the infinite loop
+    // One-time effect to mark initial load as complete after first render
+    useEffect(() => {
+        initialLoadComplete.current = true;
+    }, []);
 
     const renderItem = ({ item }: { item: any }) => (
         <AudienceListItem audience={item} type="hcp" />
@@ -36,7 +39,8 @@ export default function HCPAudiencesScreen() {
         router.push("/(tabs)/hcp-audiences/create");
     };
 
-    if (isLoading && !manualRefreshRef.current) {
+    // Only show loading indicator on initial load, not refresh
+    if (isLoading && !initialLoadComplete.current && !manualRefreshRef.current) {
         return <LoadingIndicator message="Loading HCP audiences..." />;
     }
 

@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
@@ -61,25 +62,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const api = useApi();
+  const isMounted = useRef(true);
+  const userInfoRequestInProgress = useRef(false);
+  const lastFetchTime = useRef(0);
+  const authLoadComplete = useRef(false);
+
+  // Simple debounce function to prevent multiple rapid calls
+  const debounce = (func: Function, delay: number) => {
+    const now = Date.now();
+    if (now - lastFetchTime.current > delay) {
+      lastFetchTime.current = now;
+      func();
+    }
+  };
 
   // Fetch user info from API
   const fetchUserInfo = useCallback(
     async (authToken: string) => {
+      // Prevent duplicate requests or requests too close together
+      if (userInfoRequestInProgress.current) return;
+
       try {
+        userInfoRequestInProgress.current = true;
+        console.log("Fetching user info...");
+
         // Call your user info endpoint
         const userInfo = await api.get("/auth/me", authToken);
-        setUser({
-          id: userInfo.id.toString(),
-          username: userInfo.username,
-          email: userInfo.email,
-          // Add other user properties as needed
-        });
+
+        if (isMounted.current) {
+          setUser({
+            id: userInfo.id.toString(),
+            username: userInfo.username,
+            email: userInfo.email,
+            // Add other user properties as needed
+          });
+          console.log("User info fetched successfully");
+        }
       } catch (error) {
         console.error("Failed to fetch user info:", error);
         // If we can't get user info, clear the token and user
-        await storage.deleteItemAsync("authToken");
-        setToken(null);
-        setUser(null);
+        if (isMounted.current) {
+          await storage.deleteItemAsync("authToken");
+          setToken(null);
+          setUser(null);
+        }
+      } finally {
+        userInfoRequestInProgress.current = false;
       }
     },
     [api],
@@ -87,52 +115,103 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Load the auth token and user info on startup
   const loadAuth = useCallback(async () => {
-    setLoading(true);
+    // Skip if already completed or in progress
+    if (authLoadComplete.current || !isMounted.current || userInfoRequestInProgress.current) {
+      return;
+    }
+
     try {
+      setLoading(true);
+      console.log("Loading auth state...");
+
       const storedToken = await storage.getItemAsync("authToken");
-      if (storedToken) {
+      if (storedToken && isMounted.current) {
+        console.log("Token found, setting token state");
         setToken(storedToken);
         await fetchUserInfo(storedToken);
+      } else {
+        console.log("No token found");
+        if (isMounted.current) {
+          setUser(null);
+          setToken(null);
+        }
       }
+
+      // Mark auth loading as complete
+      authLoadComplete.current = true;
+
     } catch (error) {
       console.error("Error loading auth state:", error);
       // Clear auth state on error
-      await storage.deleteItemAsync("authToken");
-      setToken(null);
-      setUser(null);
+      if (isMounted.current) {
+        await storage.deleteItemAsync("authToken");
+        setToken(null);
+        setUser(null);
+      }
     } finally {
-      setLoading(false);
+      if (isMounted.current) {
+        console.log("Auth loading complete");
+        setLoading(false);
+      }
     }
   }, [fetchUserInfo]);
 
-  // Load auth state on component mount
+  // Load auth state on component mount - only once
   useEffect(() => {
-    loadAuth();
+    isMounted.current = true;
+
+    // Use debouncing to prevent multiple calls
+    debounce(() => {
+      loadAuth();
+    }, 300);
+
+    return () => {
+      isMounted.current = false;
+    };
   }, [loadAuth]);
 
-  // Login function
+  // Modified login function in useAuth.tsx
   const login = useCallback(
     async (username: string, password: string) => {
+      if (!isMounted.current) return;
+
       try {
         setLoading(true);
+        // Reset auth load complete to force a fresh check
+        authLoadComplete.current = false;
+
+        console.log("Attempting login...");
+
         // Make the login request
         const response = await api.post("/auth/token", { username, password });
         const newToken = response.access_token;
 
-        // Store the token in secure storage
-        await storage.setItemAsync("authToken", newToken);
-        setToken(newToken);
+        if (isMounted.current) {
+          console.log("Login successful, setting token");
+          // Store the token in secure storage
+          await storage.setItemAsync("authToken", newToken);
+          setToken(newToken);
 
-        // Fetch the user information
-        await fetchUserInfo(newToken);
+          // Fetch the user information
+          await fetchUserInfo(newToken);
 
-        // Fixed navigation path - use direct path instead of dynamic one
-        router.replace("/(tabs)");
+          console.log("Navigating to dashboard...");
+
+          // Force a small delay to ensure state is updated before navigation
+          setTimeout(() => {
+            if (isMounted.current) {
+              // Use replace instead of navigate to prevent going back to login
+              router.replace("/(tabs)");
+            }
+          }, 100);
+        }
       } catch (error) {
         console.error("Login failed:", error);
         throw error;
       } finally {
-        setLoading(false);
+        if (isMounted.current) {
+          setLoading(false);
+        }
       }
     },
     [api, fetchUserInfo],
@@ -140,21 +219,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Logout function
   const logout = useCallback(async () => {
+    if (!isMounted.current) return;
+
     try {
       setLoading(true);
+      // Reset auth load complete to force a fresh check on next login
+      authLoadComplete.current = false;
+
       // Clear the auth token from storage
       await storage.deleteItemAsync("authToken");
 
-      // Clear the auth state
-      setToken(null);
-      setUser(null);
+      if (isMounted.current) {
+        // Clear the auth state
+        setToken(null);
+        setUser(null);
 
-      // Fixed navigation path
-      router.replace("/(auth)/login");
+        // Navigate to login
+        router.replace("/(auth)/login");
+      }
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {
-      setLoading(false);
+      if (isMounted.current) {
+        setLoading(false);
+      }
     }
   }, []);
 
