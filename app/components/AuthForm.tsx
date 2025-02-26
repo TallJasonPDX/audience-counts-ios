@@ -1,8 +1,8 @@
 // components/AuthForm.tsx
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import ThemedView from "./ThemedView";
-import ThemedText from "./ThemedText";
+import { ThemedView } from "./ThemedView";
+import { ThemedText } from "./ThemedText";
 import { Link } from "expo-router";
 
 interface AuthFormProps {
@@ -14,8 +14,7 @@ interface AuthFormProps {
   ) => Promise<void>;
 }
 
-export default function AuthForm({ type, onSubmit }: AuthFormProps) {
-  // Changed: Added 'export default'
+export function AuthForm({ type, onSubmit }: AuthFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -40,7 +39,7 @@ export default function AuthForm({ type, onSubmit }: AuthFormProps) {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.formContainer}>
       <ThemedText type="title">
         {type === "login" ? "Login" : "Register"}
       </ThemedText>
@@ -93,16 +92,14 @@ export default function AuthForm({ type, onSubmit }: AuthFormProps) {
           <ThemedText type="link">Register</ThemedText>
         </Link>
       )}
-    </ThemedView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
+  formContainer: {
+    width: "100%",
     alignItems: "center",
-    padding: 20,
   },
   input: {
     width: "100%",
@@ -116,3 +113,5 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
 });
+
+export default AuthForm;

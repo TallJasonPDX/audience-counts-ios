@@ -1,10 +1,12 @@
 // app/(tabs)/_layout.tsx
 import { Tabs } from "expo-router";
-import { IconSymbol } from "../components/ui/IconSymbol"; // Assuming you have this
-import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { router } from "expo-router";
+import { ActivityIndicator, View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "../hooks/useAuth";
+import { ThemedView } from "../components/ThemedView";
+import { ThemedText } from "../components/ThemedText";
 
 export default function TabLayout() {
   const { user, loading } = useAuth();
@@ -12,14 +14,27 @@ export default function TabLayout() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!loading && !user) {
-      router.replace("/login"); // Go back to login screen
+      // Only redirect if we've checked auth state and user is not logged in
+      router.replace("/login");
     }
   }, [user, loading]);
 
-  if (!user) {
-    return null; // Important: Don't render tabs if not logged in
+  // Show loading indicator while checking auth state
+  if (loading) {
+    return (
+      <ThemedView style={styles.container}>
+        <ActivityIndicator size="large" />
+        <ThemedText style={styles.loadingText}>Loading...</ThemedText>
+      </ThemedView>
+    );
   }
 
+  // Don't render the tab navigator if not logged in
+  if (!user) {
+    return null;
+  }
+
+  // User is authenticated, render the tab navigator
   return (
     <Tabs>
       <Tabs.Screen
@@ -52,3 +67,14 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+  },
+});

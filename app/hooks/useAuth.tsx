@@ -1,26 +1,21 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
-import useApi from "./useApi";
 import { Platform } from "react-native";
+import useApi from "./useApi";
 
-const webStorage = {
-  async getItemAsync(key: string) {
-    return localStorage.getItem(key);
-  },
-  async setItemAsync(key: string, value: string) {
-    return localStorage.setItem(key, value);
-  },
-  async deleteItemAsync(key: string) {
-    return localStorage.removeItem(key);
-  },
-};
-
-const storage = Platform.OS === "web" ? webStorage : SecureStore;
-
+// Define proper user type
 type User = {
   id: string;
   username: string;
+  email?: string;
+  // Add other user properties as needed
 } | null;
 
 interface AuthContextType {
@@ -31,6 +26,25 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
+// Storage implementation for web
+const webStorage = {
+  async getItemAsync(key: string) {
+    return localStorage.getItem(key);
+  },
+  async setItemAsync(key: string, value: string) {
+    localStorage.setItem(key, value);
+    return true;
+  },
+  async deleteItemAsync(key: string) {
+    localStorage.removeItem(key);
+    return true;
+  },
+};
+
+// Use appropriate storage implementation based on platform
+const storage = Platform.OS === "web" ? webStorage : SecureStore;
+
+// Create auth context
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function useAuth() {
@@ -47,47 +61,110 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const api = useApi();
 
-  useEffect(() => {
-    loadToken();
-  }, []);
+  // Fetch user info from API
+  const fetchUserInfo = useCallback(
+    async (authToken: string) => {
+      try {
+        // Call your user info endpoint
+        const userInfo = await api.get("/auth/me", authToken);
+        setUser({
+          id: userInfo.id.toString(),
+          username: userInfo.username,
+          email: userInfo.email,
+          // Add other user properties as needed
+        });
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
+        // If we can't get user info, clear the token and user
+        await storage.deleteItemAsync("authToken");
+        setToken(null);
+        setUser(null);
+      }
+    },
+    [api],
+  );
 
-  const loadToken = async () => {
+  // Load the auth token and user info on startup
+  const loadAuth = useCallback(async () => {
+    setLoading(true);
     try {
       const storedToken = await storage.getItemAsync("authToken");
       if (storedToken) {
         setToken(storedToken);
-        setUser({ id: "1", username: "user" });
+        await fetchUserInfo(storedToken);
       }
     } catch (error) {
-      console.error("Error loading token:", error);
+      console.error("Error loading auth state:", error);
+      // Clear auth state on error
+      await storage.deleteItemAsync("authToken");
+      setToken(null);
+      setUser(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchUserInfo]);
 
-  const login = async (username: string, password: string) => {
+  // Load auth state on component mount
+  useEffect(() => {
+    loadAuth();
+  }, [loadAuth]);
+
+  // Login function
+  const login = useCallback(
+    async (username: string, password: string) => {
+      try {
+        setLoading(true);
+        // Make the login request
+        const response = await api.post("/auth/token", { username, password });
+        const newToken = response.access_token;
+
+        // Store the token in secure storage
+        await storage.setItemAsync("authToken", newToken);
+        setToken(newToken);
+
+        // Fetch the user information
+        await fetchUserInfo(newToken);
+
+        // Navigate to the main app
+        router.replace("/(tabs)");
+      } catch (error) {
+        console.error("Login failed:", error);
+        throw error;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [api, fetchUserInfo],
+  );
+
+  // Logout function
+  const logout = useCallback(async () => {
     try {
-      console.log("Login called with:", { username, password }); // Log the values
-      const response = await api.post("/auth/token", { username, password });
-      const newToken = response.access_token;
-      await storage.setItemAsync("authToken", newToken);
-      setToken(newToken);
-      setUser({ id: "1", username });
-      router.replace("/(tabs)");
+      setLoading(true);
+      // Clear the auth token from storage
+      await storage.deleteItemAsync("authToken");
+
+      // Clear the auth state
+      setToken(null);
+      setUser(null);
+
+      // Navigate to the login screen
+      router.replace("/login");
     } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
+      console.error("Logout failed:", error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const logout = async () => {
-    await storage.deleteItemAsync("authToken");
-    setToken(null);
-    setUser(null);
-    router.replace("/");
+  // Context value
+  const value = {
+    user,
+    loading,
+    token,
+    login,
+    logout,
   };
-
-  const value = { user, loading, token, login, logout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
