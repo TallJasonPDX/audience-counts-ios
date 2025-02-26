@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Button } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuth } from './hooks/useAuth';
 import ThemedView from './components/ThemedView';
@@ -21,12 +21,38 @@ export default function Index() {
           <Button title="Logout" onPress={logout} />
         </View>
       ) : (
-        <View style={{ alignItems: 'center', gap: 20 }}>
+        <View style={styles.container}>
           <ThemedText>Please log in to continue</ThemedText>
-          <Button title="Login" onPress={() => router.push('/(auth)/login')} />
-          <Button title="Register" onPress={() => router.push('/(auth)/register')} />
+          <Pressable 
+            style={styles.button} 
+            onPress={() => router.push('/(auth)/login')}
+          >
+            <ThemedText>Login</ThemedText>
+          </Pressable>
+          <Pressable 
+            style={styles.button}
+            onPress={() => router.push('/(auth)/register')}
+          >
+            <ThemedText>Register</ThemedText>
+          </Pressable>
         </View>
       )}
     </ThemedView>
   );
+
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    gap: 20,
+  },
+  button: {
+    backgroundColor: '#2196F3',
+    padding: 10,
+    borderRadius: 5,
+    minWidth: 100,
+    alignItems: 'center',
+  }
+});
+
 }
