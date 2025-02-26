@@ -6,6 +6,20 @@ import { useAuth } from './hooks/useAuth';
 import ThemedView from './components/ThemedView';
 import ThemedText from './components/ThemedText';
 
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    gap: 20,
+  },
+  button: {
+    backgroundColor: '#2196F3',
+    padding: 10,
+    borderRadius: 5,
+    minWidth: 100,
+    alignItems: 'center',
+  }
+});
+
 export default function Index() {
   const { user, logout } = useAuth();
   console.log('Current user state:', user);
@@ -17,8 +31,12 @@ export default function Index() {
       {user ? (
         <View style={{ alignItems: 'center', gap: 20 }}>
           <ThemedText>Logged in as: {user.username}</ThemedText>
-          <Button title="Go to Dashboard" onPress={() => router.push('/(tabs)')} />
-          <Button title="Logout" onPress={logout} />
+          <Pressable style={styles.button} onPress={() => router.push('/(tabs)')}>
+            <ThemedText>Go to Dashboard</ThemedText>
+          </Pressable>
+          <Pressable style={styles.button} onPress={logout}>
+            <ThemedText>Logout</ThemedText>
+          </Pressable>
         </View>
       ) : (
         <View style={styles.container}>
@@ -39,20 +57,4 @@ export default function Index() {
       )}
     </ThemedView>
   );
-
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    gap: 20,
-  },
-  button: {
-    backgroundColor: '#2196F3',
-    padding: 10,
-    borderRadius: 5,
-    minWidth: 100,
-    alignItems: 'center',
-  }
-});
-
 }
