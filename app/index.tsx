@@ -8,6 +8,7 @@ import ThemedText from './components/ThemedText';
 
 export default function Index() {
   const { user, logout } = useAuth();
+  console.log('Current user state:', user);
 
   const handleLogout = async () => {
     await logout();
