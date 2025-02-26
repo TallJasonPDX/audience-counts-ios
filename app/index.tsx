@@ -1,5 +1,6 @@
 
-import { View, Text, Button } from 'react-native';
+import React from 'react';
+import { View, Button } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuth } from './hooks/useAuth';
 import ThemedView from './components/ThemedView';
