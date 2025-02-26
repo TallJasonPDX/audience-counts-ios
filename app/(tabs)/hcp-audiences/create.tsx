@@ -34,7 +34,7 @@ export default function CreateHCPAudienceScreen() {
     useEffect(() => {
         const fetchSpecialties = async () => {
             try {
-                const response = await get("/specialties"); // Assuming you have this endpoint
+                const response = await get("/md_specialties"); // Assuming you have this endpoint
                 setSpecialties(response.map((s: any) => s.specialty)); // Adjust based on your API response
             } catch (error) {
                 console.error("Failed to fetch specialties:", error);
