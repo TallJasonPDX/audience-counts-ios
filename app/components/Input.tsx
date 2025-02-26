@@ -37,11 +37,11 @@ export function Input({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      {label && (
+      {label ? (
         <Text style={[styles.label, { color: colors.subtitle }, labelStyle]}>
           {label}
         </Text>
-      )}
+      ) : null}
 
       <View
         style={[
@@ -52,14 +52,14 @@ export function Input({
           },
         ]}
       >
-        {icon && (
+        {icon ? (
           <Ionicons
             name={icon}
             size={20}
             color={colors.icon}
             style={styles.icon}
           />
-        )}
+        ) : null}
 
         <TextInput
           style={[
@@ -74,7 +74,9 @@ export function Input({
         />
       </View>
 
-      {error && <Text style={[styles.error, { color: colors.error }]}>{error}</Text>}
+      {error ? (
+        <Text style={[styles.error, { color: colors.error }]}>{error}</Text>
+      ) : null}
     </View>
   );
 }

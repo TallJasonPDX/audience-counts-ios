@@ -1,12 +1,9 @@
-// components/ui/TabBarBackground.tsx
+// app/components/ui/TabBarBackground.tsx
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
 export default function TabBarBackground() {
-  // Added export default
   // Provide a default, cross-platform background.
-  // This could be a simple View with a background color,
-  // or a more complex component if needed.
   return <View style={styles.background} />;
 }
 

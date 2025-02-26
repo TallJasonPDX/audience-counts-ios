@@ -1,3 +1,4 @@
+// app/hooks/useAuth.tsx
 import React, {
   createContext,
   useContext,
@@ -125,7 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Fetch the user information
         await fetchUserInfo(newToken);
 
-        // Navigate to the main app
+        // Fixed navigation path - use direct path instead of dynamic one
         router.replace("/(tabs)");
       } catch (error) {
         console.error("Login failed:", error);
@@ -148,8 +149,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(null);
       setUser(null);
 
-      // Navigate to the login screen
-      router.replace("/login");
+      // Fixed navigation path
+      router.replace("/(auth)/login");
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {

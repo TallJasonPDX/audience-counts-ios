@@ -1,45 +1,93 @@
-import { View, Text, FlatList, Button, StyleSheet } from "react-native";
+// app/(tabs)/rn-audiences/index.tsx
+import { useEffect, useRef } from "react";
+import { StyleSheet, FlatList, View, TouchableOpacity } from "react-native";
 import useAudiences from "../../hooks/useAudiences";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import ThemedView from "../../components/ThemedView";
 import ThemedText from "../../components/ThemedText";
-import { useEffect } from "react";
+import Button from "../../components/Button";
+import LoadingIndicator from "../../components/LoadingIndicator";
+import ErrorMessage from "../../components/ErrorMessage";
+import Colors from "../../constants/Colors";
+import useColorScheme from "../../hooks/useColorScheme";
+import { Ionicons } from "@expo/vector-icons";
+import AudienceListItem from "../../components/AudienceListItem";
 
 export default function RNAudiencesScreen() {
+    const colorScheme = useColorScheme() || "light";
+    const colors = Colors[colorScheme];
     const { audiences, isLoading, error, refreshAudiences } =
         useAudiences("rn");
+    const manualRefreshRef = useRef(false);
 
-    useEffect(() => {
+    // Only manually trigger refresh when component mounts or user explicitly requests it
+    const handleRefresh = () => {
+        manualRefreshRef.current = true;
         refreshAudiences();
-    }, [refreshAudiences]);
+    };
 
-    if (isLoading) {
-        return <Text>Loading audiences...</Text>;
+    // We don't need this effect since the useAudiences hook has its own initialization effect
+    // This was likely causing the infinite loop
+
+    const renderItem = ({ item }: { item: any }) => (
+        <AudienceListItem audience={item} type="rn" />
+    );
+
+    const handleCreateAudience = () => {
+        router.push("/(tabs)/rn-audiences/create");
+    };
+
+    if (isLoading && !manualRefreshRef.current) {
+        return <LoadingIndicator message="Loading audiences..." />;
     }
 
     if (error) {
-        return <Text>Error: {error}</Text>;
+        return <ErrorMessage message={error} />;
     }
 
     return (
         <ThemedView style={styles.container}>
-            <ThemedText type="title">RN Audiences</ThemedText>
-            <Button
-                title="New RN Audience"
-                onPress={() => router.push("/rn-audiences/create")}
-            />
-            <FlatList
-                data={audiences}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <View style={styles.item}>
-                        <Link href={`/rn-audiences/${item.id}`}>
-                            <Text style={styles.linkText}>{item.name}</Text>
-                        </Link>
-                        <Text>{item.description}</Text>
-                    </View>
-                )}
-            />
+            <View style={styles.header}>
+                <ThemedText type="title">RN Audiences</ThemedText>
+                <Button
+                    title="Create New"
+                    onPress={handleCreateAudience}
+                    variant="primary"
+                    size="medium"
+                    style={styles.createButton}
+                />
+            </View>
+
+            {audiences.length === 0 ? (
+                <View style={styles.emptyContainer}>
+                    <Ionicons
+                        name="people-outline"
+                        size={60}
+                        color={colors.subtitle}
+                    />
+                    <ThemedText type="subtitle" style={styles.emptyText}>
+                        No audiences found
+                    </ThemedText>
+                    <ThemedText style={styles.emptySubtext}>
+                        Create your first RN audience to get started
+                    </ThemedText>
+                    <Button
+                        title="Create Audience"
+                        onPress={handleCreateAudience}
+                        style={styles.emptyButton}
+                    />
+                </View>
+            ) : (
+                <FlatList
+                    data={audiences}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={renderItem}
+                    contentContainerStyle={styles.listContent}
+                    showsVerticalScrollIndicator={false}
+                    refreshing={isLoading && manualRefreshRef.current}
+                    onRefresh={handleRefresh}
+                />
+            )}
         </ThemedView>
     );
 }
@@ -49,13 +97,34 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
     },
-    item: {
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: "#ccc",
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
     },
-    linkText: {
-        fontSize: 18,
-        color: "blue",
+    createButton: {
+        minWidth: 120,
+    },
+    listContent: {
+        paddingBottom: 20,
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+    },
+    emptyText: {
+        marginTop: 20,
+        marginBottom: 10,
+        textAlign: "center",
+    },
+    emptySubtext: {
+        textAlign: "center",
+        marginBottom: 30,
+    },
+    emptyButton: {
+        minWidth: 180,
     },
 });

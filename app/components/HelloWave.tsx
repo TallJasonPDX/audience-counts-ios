@@ -1,5 +1,6 @@
+// app/components/HelloWave.tsx
 import { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -11,7 +12,6 @@ import Animated, {
 import { ThemedText } from "./ThemedText";
 
 export default function HelloWave() {
-  // Changed: Added 'export default'
   const rotationAnimation = useSharedValue(0);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function HelloWave() {
 
   return (
     <Animated.View style={animatedStyle}>
-      <ThemedText style={styles.text}>👋</ThemedText>
+      <Text style={styles.text}>👋</Text>
     </Animated.View>
   );
 }

@@ -1,42 +1,43 @@
 // app/(auth)/login.tsx
 import { useState } from "react";
-import { 
-  StyleSheet, 
-  TextInput, 
-  TouchableOpacity, 
-  View, 
-  Text, 
-  KeyboardAvoidingView, 
-  Platform, 
+import {
+  StyleSheet,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
-  ActivityIndicator,
-  Alert
+  Alert,
 } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
+import Button from "../components/Button";
+import Input from "../components/Input";
 
 export default function LoginScreen() {
   const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleLogin = async () => {
     if (!username || !password) {
-      setError("Please enter both username and password");
+      setErrorMsg("Please enter both username and password");
       return;
     }
 
     try {
       setIsLoading(true);
-      setError("");
+      setErrorMsg("");
       await login(username, password);
     } catch (e: any) {
-      setError(e.message || "Login failed. Please check your credentials.");
-      Alert.alert("Login Failed", e.message || "Please check your credentials and try again.");
+      setErrorMsg(e.message || "Login failed. Please check your credentials.");
+      Alert.alert(
+        "Login Failed",
+        e.message || "Please check your credentials and try again.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +50,7 @@ export default function LoginScreen() {
     >
       <StatusBar style="dark" />
 
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
@@ -58,63 +59,51 @@ export default function LoginScreen() {
             <Text style={styles.logoText}>A</Text>
           </View>
           <Text style={styles.appName}>Audience Synergy</Text>
-          <Text style={styles.appTagline}>Manage your RN and HCP audiences effectively</Text>
+          <Text style={styles.appTagline}>
+            Manage your RN and HCP audiences effectively
+          </Text>
         </View>
 
         <View style={styles.formContainer}>
           <Text style={styles.formTitle}>Sign In</Text>
 
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+          <Input
+            label="Username"
+            value={username}
+            onChangeText={setUsername}
+            placeholder="Enter your username"
+            autoCapitalize="none"
+            autoCorrect={false}
+            icon="person-outline"
+            error={errorMsg && !username ? "Username is required" : ""}
+          />
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Username</Text>
-            <View style={styles.inputWrapper}>
-              <Ionicons name="person-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your username"
-                placeholderTextColor="#94a3b8"
-                value={username}
-                onChangeText={setUsername}
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
-          </View>
+          <Input
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Enter your password"
+            secureTextEntry
+            autoCapitalize="none"
+            icon="lock-closed-outline"
+            error={errorMsg && !password ? "Password is required" : ""}
+          />
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Password</Text>
-            <View style={styles.inputWrapper}>
-              <Ionicons name="lock-closed-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your password"
-                placeholderTextColor="#94a3b8"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                autoCapitalize="none"
-              />
-            </View>
-          </View>
+          {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
 
-          <TouchableOpacity 
-            style={styles.loginButton}
+          <Button
+            title="SIGN IN"
             onPress={handleLogin}
+            isLoading={isLoading}
             disabled={isLoading}
-            activeOpacity={0.8}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.loginButtonText}>SIGN IN</Text>
-            )}
-          </TouchableOpacity>
+            size="large"
+            style={styles.loginButton}
+          />
         </View>
 
         <View style={styles.registerContainer}>
           <Text style={styles.registerText}>Don't have an account?</Text>
-          <Link href="/register" style={styles.registerLink}>
+          <Link href="/(auth)/register" style={styles.registerLink}>
             <Text style={styles.registerLinkText}>Register</Text>
           </Link>
         </View>
@@ -187,43 +176,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 14,
   },
-  inputGroup: {
-    marginBottom: 16,
-  },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#64748b",
-    marginBottom: 6,
-  },
-  inputWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
-    borderRadius: 8,
-    backgroundColor: "#f8fafc",
-  },
-  inputIcon: {
-    paddingLeft: 12,
-  },
-  input: {
-    flex: 1,
-    padding: 12,
-    fontSize: 16,
-    color: "#1e293b",
-  },
   loginButton: {
-    backgroundColor: "#3b82f6",
-    padding: 14,
-    borderRadius: 8,
-    alignItems: "center",
     marginTop: 8,
-  },
-  loginButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
   },
   registerContainer: {
     flexDirection: "row",
