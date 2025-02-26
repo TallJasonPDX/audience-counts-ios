@@ -23,9 +23,10 @@ const styles = StyleSheet.create({
 export default function Index() {
   const { user, logout } = useAuth();
   console.log('Current user state:', user);
+  console.log('Rendering Index component');
 
   return (
-    <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+    <ThemedView style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
       <ThemedText style={{ fontSize: 24, marginBottom: 20 }}>Welcome to the App!</ThemedText>
       
       {user ? (
