@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Button } from 'react-native';
+import { View, Button, Text } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuth } from './hooks/useAuth';
 import ThemedView from './components/ThemedView';
@@ -22,13 +22,13 @@ export default function Index() {
         <View style={{ alignItems: 'center' }}>
           <ThemedText style={{ marginBottom: 20 }}>Logged in as: {user.username}</ThemedText>
           <Button title="Logout" onPress={handleLogout} />
-          <Link href="/(tabs)" style={{ marginTop: 20, color: 'blue' }}>
-            <Text>Go to Tabs</Text>
+          <Link href="/(tabs)" asChild>
+            <Button title="Go to Tabs" />
           </Link>
         </View>
       ) : (
-        <Link href="/login" style={{ color: 'blue' }}>
-          <Text>Login</Text>
+        <Link href="/(auth)/login" asChild>
+          <Button title="Login" />
         </Link>
       )}
     </ThemedView>
