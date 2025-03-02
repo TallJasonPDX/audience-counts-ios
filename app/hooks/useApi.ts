@@ -1,11 +1,13 @@
 // hooks/useApi.ts
 import { useState, useCallback, useRef } from "react";
 import { API_BASE_URL } from "../constants/api";
+import { useAuth } from "./useAuth";
 
 export default function useApi() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const pendingRequests = useRef(new Map());
+    const auth = useAuth();
 
     const makeRequest = useCallback(
         async (
@@ -34,7 +36,8 @@ export default function useApi() {
 
                     if (token) {
                         headers["Authorization"] = `Bearer ${token}`;
-                        console.log(`Using token for ${url}: ${token.substring(0, 10)}...`); // Log token usage (first 10 chars only)
+                        // Only log that we're using a token, not any part of the actual token
+                        console.log(`Using token for ${url}: Yes`);
                     }
 
                     let body = undefined;
