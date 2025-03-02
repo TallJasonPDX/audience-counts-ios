@@ -9,12 +9,10 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import useAudiences from "../../hooks/useAudiences";
 import useApi from "../../hooks/useApi";
+import { useAuth } from "../../hooks/useAuth";
 import Colors from "../../constants/Colors";
 import useColorScheme from "../../hooks/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
-
-// Placeholder useAuth hook -  Replace with your actual authentication context
-const useAuth = () => ({ token: 'YOUR_TOKEN_HERE' }); // REPLACE 'YOUR_TOKEN_HERE' with actual token retrieval
 
 export default function CreateRNAudienceScreen() {
     const colorScheme = useColorScheme() || "light";
@@ -33,11 +31,11 @@ export default function CreateRNAudienceScreen() {
     const [geoLogic, setGeoLogic] = useState("OR");
     const [formError, setFormError] = useState("");
     const { get } = useApi();
+    const { token } = useAuth();
 
     useEffect(() => {
         const fetchSpecialties = async () => {
             try {
-                const { token } = useAuth();
                 if (!token) {
                     throw new Error("No authentication token available");
                 }
@@ -165,12 +163,18 @@ export default function CreateRNAudienceScreen() {
                         ]}
                     >
                         <Picker
-                            selectedValue={selectedSpecialties}
-                            onValueChange={(value) =>
-                                setSelectedSpecialties(
-                                    Array.isArray(value) ? value : [value],
-                                )
+                            selectedValue={
+                                selectedSpecialties.length > 0
+                                    ? selectedSpecialties[0]
+                                    : ""
                             }
+                            onValueChange={(value) => {
+                                if (value) {
+                                    setSelectedSpecialties([value]);
+                                } else {
+                                    setSelectedSpecialties([]);
+                                }
+                            }}
                             style={styles.picker}
                         >
                             <Picker.Item label="Select specialties" value="" />
