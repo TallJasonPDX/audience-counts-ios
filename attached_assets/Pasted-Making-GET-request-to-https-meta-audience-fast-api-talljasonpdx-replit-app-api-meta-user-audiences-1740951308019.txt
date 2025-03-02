@@ -1,0 +1,173 @@
+Making GET request to https://meta-audience-fast-api-talljasonpdx.replit.app/api/meta/user_audiences with auth: Yes
+entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91860 Making GET request to https://meta-audience-fast-api-talljasonpdx.replit.app/api/meta/specialties with auth: Yes
+hook.js:608 Unexpected text node: . A text node cannot be a child of a <View>. Error Component Stack
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:36684:26
+    at ScrollView (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:35290:7)
+    at ScrollView (<anonymous>)
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at ThemedView (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:117581:9)
+    at CreateRNAudienceScreen (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:119135:53)
+    at Suspense (<anonymous>)
+    at Route (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:73873:5)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:74242:11
+    at StaticContainer (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:66311:18)
+    at EnsureSingleNavigator (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:61346:5)
+    at SceneView (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:66202:5)
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at AnimatedHeaderHeightProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:68920:5)
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:51709:62
+    at Background (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:69202:9)
+    at Screen (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:73574:73)
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at SafeAreaProviderCompat (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:73459:5)
+    at NativeStackView (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:68817:5)
+    at PreventRemoveProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:64923:5)
+    at NavigationContent (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:65929:5)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:65945:7
+    at NativeStackNavigator (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:59141:9)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:73767:21
+    at DetailsLayout (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:117425:30)
+    at Suspense (<anonymous>)
+    at Route (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:73873:5)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:74242:11
+    at StaticContainer (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:66311:18)
+    at EnsureSingleNavigator (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:61346:5)
+    at SceneView (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:66202:5)
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at AnimatedHeaderHeightProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:68920:5)
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:51709:62
+    at Background (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:69202:9)
+    at Screen (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:73574:73)
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at SafeAreaProviderCompat (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:73459:5)
+    at NativeStackView (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:68817:5)
+    at PreventRemoveProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:64923:5)
+    at NavigationContent (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:65929:5)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:65945:7
+    at NativeStackNavigator (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:59141:9)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:73767:21
+    at ThemeProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:62639:5)
+    at AuthProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:58599:5)
+    at RootLayout (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:146830:53)
+    at Suspense (<anonymous>)
+    at Route (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:73873:5)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:74242:11
+    at div (<anonymous>)
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40683:27
+    at NativeSafeAreaProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:71819:5)
+    at SafeAreaProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:71689:9)
+    at wrapper (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:89774:7)
+    at ThemeProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:62639:5)
+    at EnsureSingleNavigator (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:61346:5)
+    at BaseNavigationContainer (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:59768:5)
+    at NavigationContainerInner (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:89987:9)
+    at ContextNavigator (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:89816:5)
+    at ExpoRoot (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:89765:18)
+    at _HelmetProvider (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:149521:7)
+    at App (<anonymous>)
+    at LogBoxStateSubscription (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:3952:9)
+    at ErrorOverlay (<anonymous>)
+    at withDevTools(ErrorOverlay) (<anonymous>)
+    at AppContainer (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:77528:5)
+overrideMethod @ hook.js:608
+registerError @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:3597
+console.error @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:3535
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40705
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:40703
+renderWithHooks @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:21028
+updateForwardRef @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:24282
+beginWork @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:26343
+beginWork$1 @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:31266
+performUnitOfWork @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30536
+workLoopSync @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30459
+renderRootSync @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30432
+performConcurrentWorkOnRoot @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29827
+workLoop @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:33585
+flushWork @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:33563
+performWorkUntilDeadline @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:33800Understand this errorAI
+entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91863 
+            
+            
+           GET https://meta-audience-fast-api-talljasonpdx.replit.app/api/meta/specialties 401 (Unauthorized)
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91863
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91887
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91893
+fetchSpecialties @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:119168
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:119178
+commitHookEffectListMount @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:27619
+commitPassiveMountOnFiber @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29112
+commitPassiveMountEffects_complete @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29084
+commitPassiveMountEffects_begin @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29074
+commitPassiveMountEffects @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29064
+flushPassiveEffectsImpl @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30947
+flushPassiveEffects @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30900
+commitRootImpl @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30859
+commitRoot @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30642
+performSyncWorkOnRoot @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30151
+flushSyncCallbacks @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:18121
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29756Understand this errorAI
+hook.js:608 API error (401): {"detail":"Could not validate credentials"}
+overrideMethod @ hook.js:608
+registerError @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:3597
+console.error @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:3535
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91869
+await in (anonymous)
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91887
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91893
+fetchSpecialties @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:119168
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:119178
+commitHookEffectListMount @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:27619
+commitPassiveMountOnFiber @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29112
+commitPassiveMountEffects_complete @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29084
+commitPassiveMountEffects_begin @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29074
+commitPassiveMountEffects @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29064
+flushPassiveEffectsImpl @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30947
+flushPassiveEffects @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30900
+commitRootImpl @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30859
+commitRoot @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30642
+performSyncWorkOnRoot @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30151
+flushSyncCallbacks @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:18121
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29756Understand this errorAI
+hook.js:608 API Request Failed: Error: Not authenticated
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91870:19
+    at async fetchSpecialties (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:119168:28)
+overrideMethod @ hook.js:608
+registerError @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:3597
+console.error @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:3535
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91879
+await in (anonymous)
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91887
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91893
+fetchSpecialties @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:119168
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:119178
+commitHookEffectListMount @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:27619
+commitPassiveMountOnFiber @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29112
+commitPassiveMountEffects_complete @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29084
+commitPassiveMountEffects_begin @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29074
+commitPassiveMountEffects @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29064
+flushPassiveEffectsImpl @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30947
+flushPassiveEffects @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30900
+commitRootImpl @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30859
+commitRoot @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30642
+performSyncWorkOnRoot @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:30151
+flushSyncCallbacks @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:18121
+(anonymous) @ entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:29756Understand this errorAI
+hook.js:608 Failed to fetch specialties: Error: Not authenticated
+    at entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:91870:19
+    at async fetchSpecialties (entry.bundle?platform=web&dev=true&hot=false&transform.routerRoot=app:119168:28)
