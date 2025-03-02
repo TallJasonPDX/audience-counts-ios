@@ -12,7 +12,7 @@ export default function useApi() {
             method: "GET" | "POST" | "PUT" | "DELETE",
             url: string,
             data?: any,
-            customToken?: string,
+            token?: string,
         ) => {
             // Create a unique request key
             const requestKey = `${method}:${url}:${JSON.stringify(data || {})}`;
@@ -29,12 +29,8 @@ export default function useApi() {
             const requestPromise = (async () => {
                 try {
                     const headers: HeadersInit = {};
-                    // Use provided token or fallback to token from auth context
-                    const token = customToken || (auth ? auth.token : null);
-
                     if (token) {
                         headers["Authorization"] = `Bearer ${token}`;
-                        console.log(`Using token for ${url}: ${token.substring(0, 10)}...`); // Log token usage (first 10 chars only)
                     }
 
                     let body = undefined;
@@ -59,7 +55,7 @@ export default function useApi() {
                     }
 
                     const fullUrl = API_BASE_URL + url;
-
+                    
                     console.log(`Making ${method} request to ${fullUrl} with auth: ${token ? 'Yes' : 'No'}`);
 
                     // Make the actual API call
@@ -68,19 +64,17 @@ export default function useApi() {
                         headers,
                         body,
                     });
+                    
+                    if (!response.ok) {
+                        console.error(`API error (${response.status}): ${await response.text()}`);
+                        throw new Error(response.status === 401 ? "Not authenticated" : `API error: ${response.status}`);
+                    }
 
                     if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({}));
-                        console.error(`API error (${response.status}):`, errorData);
-
-                        // Special handling for authentication errors
-                        if (response.status === 401) {
-                            console.error(`Authentication failed for ${url}. Token present: ${!!token}`);
-                            throw new Error("Not authenticated");
-                        }
-
+                        const errorData = await response.json();
                         throw new Error(
-                            errorData.detail || "An error occurred during the API request"
+                            errorData.detail ||
+                                `API Error: ${response.statusText}`,
                         );
                     }
 
@@ -105,27 +99,24 @@ export default function useApi() {
         [],
     );
 
-    // GET request
     const get = useCallback(
-        (url: string, token = null) => makeRequest("GET", url, null, token),
+        (url: string, token?: string) =>
+            makeRequest("GET", url, undefined, token),
         [makeRequest],
     );
-
-    // POST request
     const post = useCallback(
-        (url: string, data: any, token = null) => makeRequest("POST", url, data, token),
+        (url: string, data: any, token?: string) =>
+            makeRequest("POST", url, data, token),
         [makeRequest],
     );
-
-    // PUT request
     const put = useCallback(
-        (url: string, data: any, token = null) => makeRequest("PUT", url, data, token),
+        (url: string, data: any, token?: string) =>
+            makeRequest("PUT", url, data, token),
         [makeRequest],
     );
-
-    // DELETE request
     const del = useCallback(
-        (url: string, token = null) => makeRequest("DELETE", url, null, token),
+        (url: string, token?: string) =>
+            makeRequest("DELETE", url, undefined, token),
         [makeRequest],
     );
 

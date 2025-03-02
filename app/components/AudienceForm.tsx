@@ -62,9 +62,7 @@ export default function AudienceForm({
                     console.log("No auth token available");
                     return;
                 }
-                console.log(`Fetching specialties with token: ${token ? "Yes" : "No"}`);
-                // Pass token explicitly to the get function
-                const response = await get("/specialties", token);
+                const response = await get("/specialties");
                 // Assuming the backend returns an array of { specialty: string, segment_code: string }
                 if (audienceType === "rn") {
                     setSpecialties(response.map((s: any) => s.specialty));
