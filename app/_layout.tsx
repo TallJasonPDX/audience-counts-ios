@@ -9,7 +9,7 @@ import {
 import { useFonts } from "expo-font";
 import { Stack, SplashScreen } from "expo-router";
 import { useEffect } from "react";
-import { View, Text } from 'react-native';
+import { View, Text } from "react-native";
 import "react-native-reanimated";
 
 import useColorScheme from "./hooks/useColorScheme";
@@ -32,7 +32,7 @@ export default function RootLayout() {
 
   if (!loaded) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading fonts...</Text>
       </View>
     );
@@ -45,6 +45,7 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(details)" options={{ headerShown: false }} />
         </Stack>
       </ThemeProvider>
     </AuthProvider>
