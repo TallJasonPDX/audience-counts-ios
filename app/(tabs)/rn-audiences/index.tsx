@@ -36,7 +36,7 @@ export default function RNAudiencesScreen() {
     );
 
     const handleCreateAudience = () => {
-        router.push("/(tabs)/rn-audiences/create");
+        router.push("/(details)/rn-audiences/create");
     };
 
     // Only show loading indicator on initial load, not refresh

@@ -36,7 +36,7 @@ export default function HCPAudiencesScreen() {
     );
 
     const handleCreateAudience = () => {
-        router.push("/(tabs)/hcp-audiences/create");
+        router.push("/(details)/hcp-audiences/create");
     };
 
     // Only show loading indicator on initial load, not refresh

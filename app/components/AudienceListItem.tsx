@@ -26,8 +26,8 @@ export default function AudienceListItem({
 
   const href =
     type === "rn"
-      ? `/rn-audiences/${audience.id}`
-      : `/hcp-audiences/${audience.id}`;
+      ? `/(details)/rn-audiences/${audience.id}`
+      : `/(details)/hcp-audiences/${audience.id}`;
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
