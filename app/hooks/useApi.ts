@@ -55,6 +55,8 @@ export default function useApi() {
                     }
 
                     const fullUrl = API_BASE_URL + url;
+                    
+                    console.log(`Making ${method} request to ${fullUrl} with auth: ${token ? 'Yes' : 'No'}`);
 
                     // Make the actual API call
                     const response = await fetch(fullUrl, {
@@ -62,6 +64,11 @@ export default function useApi() {
                         headers,
                         body,
                     });
+                    
+                    if (!response.ok) {
+                        console.error(`API error (${response.status}): ${await response.text()}`);
+                        throw new Error(response.status === 401 ? "Not authenticated" : `API error: ${response.status}`);
+                    }
 
                     if (!response.ok) {
                         const errorData = await response.json();

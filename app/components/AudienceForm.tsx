@@ -49,11 +49,13 @@ export default function AudienceForm({
     );
     const [isLoading, setIsLoading] = useState(false); // Local loading state
     const [error, setError] = useState("");
+    const [specialtiesLoading, setSpecialtiesLoading] = useState(true); // Added loading state for specialties
     const { get } = useApi();
 
     useEffect(() => {
         const fetchSpecialties = async () => {
             try {
+                setSpecialtiesLoading(true); // Set loading state to true
                 const response = await get("/specialties");
                 // Assuming the backend returns an array of { specialty: string, segment_code: string }
                 if (audienceType === "rn") {
@@ -67,6 +69,8 @@ export default function AudienceForm({
                     "Error",
                     "Failed to load specialties. Please check your connection.",
                 );
+            } finally {
+                setSpecialtiesLoading(false); // Set loading state to false after fetching
             }
         };
 
@@ -141,20 +145,24 @@ export default function AudienceForm({
                 />
 
                 <Text>Specialties</Text>
-                <Picker
-                    selectedValue={selectedSpecialties}
-                    onValueChange={(itemValue) =>
-                        setSelectedSpecialties(itemValue)
-                    }
-                >
-                    {specialties.map((specialty) => (
-                        <Picker.Item
-                            key={specialty}
-                            label={specialty}
-                            value={specialty}
-                        />
-                    ))}
-                </Picker>
+                {specialtiesLoading ? (
+                    <Text>Loading specialties...</Text>
+                ) : (
+                    <Picker
+                        selectedValue={selectedSpecialties}
+                        onValueChange={(itemValue) =>
+                            setSelectedSpecialties(itemValue)
+                        }
+                    >
+                        {specialties.map((specialty) => (
+                            <Picker.Item
+                                key={specialty}
+                                label={specialty}
+                                value={specialty}
+                            />
+                        ))}
+                    </Picker>
+                )}
 
                 <Text>States (comma-separated)</Text>
                 <TextInput

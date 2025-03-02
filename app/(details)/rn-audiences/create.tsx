@@ -13,6 +13,9 @@ import Colors from "../../constants/Colors";
 import useColorScheme from "../../hooks/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
 
+// Placeholder useAuth hook -  Replace with your actual authentication context
+const useAuth = () => ({ token: 'YOUR_TOKEN_HERE' }); // REPLACE 'YOUR_TOKEN_HERE' with actual token retrieval
+
 export default function CreateRNAudienceScreen() {
     const colorScheme = useColorScheme() || "light";
     const colors = Colors[colorScheme];
@@ -34,7 +37,11 @@ export default function CreateRNAudienceScreen() {
     useEffect(() => {
         const fetchSpecialties = async () => {
             try {
-                const response = await get("/meta/specialties");
+                const { token } = useAuth();
+                if (!token) {
+                    throw new Error("No authentication token available");
+                }
+                const response = await get("/meta/specialties", token);
                 setSpecialties(response.map((s: any) => s.specialty));
             } catch (error) {
                 console.error("Failed to fetch specialties:", error);
@@ -46,7 +53,7 @@ export default function CreateRNAudienceScreen() {
         };
 
         fetchSpecialties();
-    }, [get]);
+    }, [get, useAuth]);
 
     const handleAddRegion = () => {
         setZipRegions([...zipRegions, { label: "", zip: "", radius: 25 }]);
