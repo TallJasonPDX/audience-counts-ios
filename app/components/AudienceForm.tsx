@@ -170,6 +170,7 @@ export default function AudienceForm({
                             />
                         ))}
                     </Picker>
+                    {/* No text nodes allowed directly in View */}
                 )}
 
                 <Text>States (comma-separated)</Text>
