@@ -12,7 +12,7 @@ export default function DetailsLayout() {
   useEffect(() => {
     if (!loading && !user && !hasRedirected.current) {
       hasRedirected.current = true;
-      router.replace("/(auth)/login");
+      router.replace("/login");
     }
   }, [user, loading]);
 

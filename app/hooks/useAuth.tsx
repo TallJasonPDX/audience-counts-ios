@@ -235,7 +235,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
 
         // Navigate to login
-        router.replace("/(auth)/login");
+        router.replace("/login"); //This line was changed.
       }
     } catch (error) {
       console.error("Logout failed:", error);
