@@ -13,6 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useApi } from "../hooks/useApi";
 import { ThemedView } from "./ThemedView";
 import { ThemedText } from "./ThemedText";
+import { useAuth } from "../hooks/useAuth";
 
 interface AudienceFormProps {
     onSubmit: (audienceData: any) => Promise<void>;
@@ -51,11 +52,16 @@ export default function AudienceForm({
     const [error, setError] = useState("");
     const [specialtiesLoading, setSpecialtiesLoading] = useState(true); // Added loading state for specialties
     const { get } = useApi();
+    const { token } = useAuth();
 
     useEffect(() => {
         const fetchSpecialties = async () => {
             try {
                 setSpecialtiesLoading(true); // Set loading state to true
+                if (!token) {
+                    console.log("No auth token available");
+                    return;
+                }
                 const response = await get("/specialties");
                 // Assuming the backend returns an array of { specialty: string, segment_code: string }
                 if (audienceType === "rn") {
@@ -75,7 +81,7 @@ export default function AudienceForm({
         };
 
         fetchSpecialties();
-    }, [get, audienceType]);
+    }, [get, audienceType, token]);
 
     const handleAddRegion = () => {
         setZipRegions([...zipRegions, { label: "", zip: "", radius: 25 }]);
