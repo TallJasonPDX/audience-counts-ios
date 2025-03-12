@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView, Alert } from "react-native";
 import { router } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
+import { generateRNSqlQuery } from "../../utils/sqlGenerator";
 import ThemedView from "../../components/ThemedView";
 import ThemedText from "../../components/ThemedText";
 import Button from "../../components/Button";
@@ -125,19 +126,28 @@ export default function CreateRNAudienceScreen() {
             // Only include experience filter if at least one value is non-zero
             const hasExperienceFilter = Object.values(experienceFilter).some(val => val > 0);
             
+            // Import the SQL generator utility at the top of your file
+            import { generateRNSqlQuery } from "../../utils/sqlGenerator";
+            
+            // Create filters object
+            const filtersObj = {
+                specialties: selectedSpecialties,
+                states: statesArray,
+                zip_regions: zipRegions.filter(
+                    (region) => region.label.trim() && region.zip.trim(),
+                ),
+                geo_logic: geoLogic,
+                ...(hasExperienceFilter && { experience_filter: experienceFilter })
+            };
+            
+            // Generate SQL query based on filters
+            const sql_query = generateRNSqlQuery(filtersObj);
+            
             const audienceData = {
                 name,
                 description,
-                sql_query: null, // Add null sql_query to prevent server error
-                filters: {
-                    specialties: selectedSpecialties,
-                    states: statesArray,
-                    zip_regions: zipRegions.filter(
-                        (region) => region.label.trim() && region.zip.trim(),
-                    ),
-                    geo_logic: geoLogic,
-                    ...(hasExperienceFilter && { experience_filter: experienceFilter })
-                },
+                sql_query, // Add generated SQL query
+                filters: filtersObj,
             };
 
             await createAudience(audienceData);
