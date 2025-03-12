@@ -40,7 +40,21 @@ export default function CreateRNAudienceScreen() {
                     throw new Error("No authentication token available");
                 }
                 const response = await get("/meta/specialties", token);
-                setSpecialties(response.map((s: any) => s.specialty));
+                
+                // Check if response is an array before using map
+                if (Array.isArray(response)) {
+                    setSpecialties(response.map((s: any) => s.specialty));
+                } else if (response && typeof response === 'object') {
+                    // Handle if response is an object with data array inside
+                    const specialtiesData = response.data || response.specialties || [];
+                    if (Array.isArray(specialtiesData)) {
+                        setSpecialties(specialtiesData.map((s: any) => s.specialty));
+                    } else {
+                        console.error("Unexpected specialties data format:", specialtiesData);
+                    }
+                } else {
+                    console.error("Unexpected API response format:", response);
+                }
             } catch (error) {
                 console.error("Failed to fetch specialties:", error);
                 Alert.alert(
@@ -51,7 +65,7 @@ export default function CreateRNAudienceScreen() {
         };
 
         fetchSpecialties();
-    }, [get, useAuth]);
+    }, [get, token]);
 
     const handleAddRegion = () => {
         setZipRegions([...zipRegions, { label: "", zip: "", radius: 25 }]);
@@ -178,13 +192,17 @@ export default function CreateRNAudienceScreen() {
                             style={styles.picker}
                         >
                             <Picker.Item label="Select specialties" value="" />
-                            {specialties.map((specialty) => (
-                                <Picker.Item
-                                    key={specialty}
-                                    label={specialty}
-                                    value={specialty}
-                                />
-                            ))}
+                            {specialties && specialties.length > 0 ? (
+                                specialties.map((specialty, index) => (
+                                    <Picker.Item
+                                        key={index}
+                                        label={specialty}
+                                        value={specialty}
+                                    />
+                                ))
+                            ) : (
+                                <Picker.Item label="Loading specialties..." value="" />
+                            )}
                         </Picker>
                     </View>
                 </View>
