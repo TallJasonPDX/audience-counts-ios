@@ -124,6 +124,15 @@ export default function RNAudienceDetailScreen() {
               <ThemedText>{audience.filters.geo_logic}</ThemedText>
             </View>
           )}
+
+          {audience.filters.experience_filter && (
+            <View style={styles.filterItem}>
+              <ThemedText type="defaultSemiBold">Experience:</ThemedText>
+              <ThemedText>
+                {audience.filters.experience_filter.min_years}-{audience.filters.experience_filter.max_years} years, {audience.filters.experience_filter.min_months}-{audience.filters.experience_filter.max_months} months
+              </ThemedText>
+            </View>
+          )}
         </View>
       )}
 

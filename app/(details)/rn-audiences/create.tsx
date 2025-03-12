@@ -29,6 +29,12 @@ export default function CreateRNAudienceScreen() {
         { label: "", zip: "", radius: 25 },
     ]);
     const [geoLogic, setGeoLogic] = useState("OR");
+    const [experienceFilter, setExperienceFilter] = useState({
+        min_years: 0,
+        max_years: 0,
+        min_months: 0,
+        max_months: 0
+    });
     const [formError, setFormError] = useState("");
     const { get } = useApi();
     const { token } = useAuth();
@@ -110,19 +116,26 @@ export default function CreateRNAudienceScreen() {
         if (!validateForm()) return;
 
         try {
+            // Create the filters object in the expected format
+            const statesArray = states
+                .split(",")
+                .map((s) => s.trim())
+                .filter((s) => s !== "");
+                
+            // Only include experience filter if at least one value is non-zero
+            const hasExperienceFilter = Object.values(experienceFilter).some(val => val > 0);
+            
             const audienceData = {
                 name,
                 description,
                 filters: {
                     specialties: selectedSpecialties,
-                    states: states
-                        .split(",")
-                        .map((s) => s.trim())
-                        .filter((s) => s !== ""),
+                    states: statesArray,
                     zip_regions: zipRegions.filter(
                         (region) => region.label.trim() && region.zip.trim(),
                     ),
                     geo_logic: geoLogic,
+                    ...(hasExperienceFilter && { experience_filter: experienceFilter })
                 },
             };
 
@@ -241,6 +254,72 @@ export default function CreateRNAudienceScreen() {
                         placeholder="e.g., CA, NV, AZ"
                         icon="location-outline"
                     />
+                </View>
+
+                <View style={styles.formSection}>
+                    <ThemedText type="subtitle">Experience Filter</ThemedText>
+                    <View style={styles.experienceFilterContainer}>
+                        <View style={styles.experienceFilterRow}>
+                            <Input
+                                label="Min Years"
+                                value={String(experienceFilter.min_years)}
+                                onChangeText={(text) => 
+                                    setExperienceFilter({
+                                        ...experienceFilter,
+                                        min_years: parseInt(text) || 0
+                                    })
+                                }
+                                placeholder="0"
+                                keyboardType="number-pad"
+                                icon="calendar-outline"
+                                containerStyle={styles.experienceInput}
+                            />
+                            <Input
+                                label="Max Years"
+                                value={String(experienceFilter.max_years)}
+                                onChangeText={(text) => 
+                                    setExperienceFilter({
+                                        ...experienceFilter,
+                                        max_years: parseInt(text) || 0
+                                    })
+                                }
+                                placeholder="0"
+                                keyboardType="number-pad"
+                                icon="calendar-outline"
+                                containerStyle={styles.experienceInput}
+                            />
+                        </View>
+                        <View style={styles.experienceFilterRow}>
+                            <Input
+                                label="Min Months"
+                                value={String(experienceFilter.min_months)}
+                                onChangeText={(text) => 
+                                    setExperienceFilter({
+                                        ...experienceFilter,
+                                        min_months: parseInt(text) || 0
+                                    })
+                                }
+                                placeholder="0"
+                                keyboardType="number-pad"
+                                icon="calendar-outline"
+                                containerStyle={styles.experienceInput}
+                            />
+                            <Input
+                                label="Max Months"
+                                value={String(experienceFilter.max_months)}
+                                onChangeText={(text) => 
+                                    setExperienceFilter({
+                                        ...experienceFilter,
+                                        max_months: parseInt(text) || 0
+                                    })
+                                }
+                                placeholder="0"
+                                keyboardType="number-pad"
+                                icon="calendar-outline"
+                                containerStyle={styles.experienceInput}
+                            />
+                        </View>
+                    </View>
                 </View>
 
                 <View style={styles.formSection}>
@@ -440,5 +519,17 @@ const styles = StyleSheet.create({
     errorText: {
         color: "#ef4444",
         marginBottom: 10,
+    },
+    experienceFilterContainer: {
+        marginTop: 10,
+    },
+    experienceFilterRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 10,
+    },
+    experienceInput: {
+        flex: 1,
+        marginRight: 10,
     },
 });
