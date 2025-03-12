@@ -128,6 +128,7 @@ export default function CreateRNAudienceScreen() {
             const audienceData = {
                 name,
                 description,
+                sql_query: null, // Add null sql_query to prevent server error
                 filters: {
                     specialties: selectedSpecialties,
                     states: statesArray,
