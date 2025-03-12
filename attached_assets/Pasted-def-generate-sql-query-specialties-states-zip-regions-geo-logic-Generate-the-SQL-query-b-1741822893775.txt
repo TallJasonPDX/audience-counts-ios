@@ -1,0 +1,71 @@
+def generate_sql_query(specialties, states, zip_regions, geo_logic):
+    """Generate the SQL query based on selected filters."""
+    # Base query with specific fields
+    base_fields = """
+        "First Name" as fn,
+        "Last Name" as ln,
+        "Email1" as email,
+        "Telephone" as phone,
+        "City" as ct,
+        "State" as st,
+        "Zip Code" as zip
+    """
+
+    # Start building the query
+    query_parts = []
+
+    # Generate CTEs for each zip region
+    if zip_regions and any(r["zip"] and r["radius"] for r in zip_regions):
+        for i, region in enumerate(zip_regions):
+            if region["zip"] and region["radius"]:
+                query_parts.append(f"""
+                radius_{i} AS (
+                    SELECT DISTINCT z.geoid10 as zip_code
+                    FROM zip_shp z,
+                        (SELECT geom FROM zip_shp WHERE geoid10 = '{region["zip"]}') as center
+                    WHERE ST_DWithin(z.geom, center.geom, {region["radius"]} * 1609.34, false)
+                )""")
+
+    # Start main query
+    main_query = f"SELECT {base_fields} FROM public.liveramp_md_feed r WHERE 1=1"
+
+    # Add specialty conditions (always AND)
+    if specialties:
+        specialty_conditions = []
+        for specialty in specialties:
+            taxonomy = next(
+                (s['as_taxonomy']
+                 for s in load_hcp_specialties() if s['specialty'] == specialty),
+                None)
+            if taxonomy:
+                specialty_conditions.append(f"\"{taxonomy}\" = '1'")
+        if specialty_conditions:
+            main_query += f" AND ({' OR '.join(specialty_conditions)})"
+
+    # Geographic conditions
+    geo_conditions = []
+
+    # State condition
+    if states:
+        state_list = [f"'{s.strip()}'" for s in states.split(',') if s.strip()]
+        if state_list:
+            geo_conditions.append(f"\"State\" IN ({','.join(state_list)})")
+
+    # Zip code regions condition using CTEs
+    zip_conditions = []
+    if zip_regions and any(r["zip"] and r["radius"] for r in zip_regions):
+        for i in range(len([r for r in zip_regions if r["zip"] and r["radius"]])):
+            zip_conditions.append(f"r.\"Zip Code\" IN (SELECT zip_code FROM radius_{i})")
+
+    if zip_conditions:
+        geo_conditions.append(f"({' OR '.join(zip_conditions)})")
+
+    # Combine geographic conditions based on selected logic
+    if geo_conditions:
+        main_query += f" AND ({f' {geo_logic} '.join(geo_conditions)})"
+
+    # Combine CTEs with main query
+    if query_parts:
+        return f"""WITH {','.join(query_parts)} {main_query}"""
+    else:
+        return main_query

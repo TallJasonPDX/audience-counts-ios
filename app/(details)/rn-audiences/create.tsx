@@ -34,7 +34,7 @@ export default function CreateRNAudienceScreen() {
         min_years: 0,
         max_years: 0,
         min_months: 0,
-        max_months: 0
+        max_months: 0,
     });
     const [formError, setFormError] = useState("");
     const { get } = useApi();
@@ -47,17 +47,23 @@ export default function CreateRNAudienceScreen() {
                     throw new Error("No authentication token available");
                 }
                 const response = await get("/meta/specialties", token);
-                
+
                 // Check if response is an array before using map
                 if (Array.isArray(response)) {
                     setSpecialties(response.map((s: any) => s.specialty));
-                } else if (response && typeof response === 'object') {
+                } else if (response && typeof response === "object") {
                     // Handle if response is an object with data array inside
-                    const specialtiesData = response.data || response.specialties || [];
+                    const specialtiesData =
+                        response.data || response.specialties || [];
                     if (Array.isArray(specialtiesData)) {
-                        setSpecialties(specialtiesData.map((s: any) => s.specialty));
+                        setSpecialties(
+                            specialtiesData.map((s: any) => s.specialty),
+                        );
                     } else {
-                        console.error("Unexpected specialties data format:", specialtiesData);
+                        console.error(
+                            "Unexpected specialties data format:",
+                            specialtiesData,
+                        );
                     }
                 } else {
                     console.error("Unexpected API response format:", response);
@@ -122,13 +128,12 @@ export default function CreateRNAudienceScreen() {
                 .split(",")
                 .map((s) => s.trim())
                 .filter((s) => s !== "");
-                
+
             // Only include experience filter if at least one value is non-zero
-            const hasExperienceFilter = Object.values(experienceFilter).some(val => val > 0);
-            
-            // Import the SQL generator utility at the top of your file
-            import { generateRNSqlQuery } from "../../utils/sqlGenerator";
-            
+            const hasExperienceFilter = Object.values(experienceFilter).some(
+                (val) => val > 0,
+            );
+
             // Create filters object
             const filtersObj = {
                 specialties: selectedSpecialties,
@@ -137,12 +142,14 @@ export default function CreateRNAudienceScreen() {
                     (region) => region.label.trim() && region.zip.trim(),
                 ),
                 geo_logic: geoLogic,
-                ...(hasExperienceFilter && { experience_filter: experienceFilter })
+                ...(hasExperienceFilter && {
+                    experience_filter: experienceFilter,
+                }),
             };
-            
+
             // Generate SQL query based on filters
             const sql_query = generateRNSqlQuery(filtersObj);
-            
+
             const audienceData = {
                 name,
                 description,
@@ -201,21 +208,34 @@ export default function CreateRNAudienceScreen() {
                         ]}
                     >
                         <View>
-                            <ThemedText type="defaultSemiBold" style={styles.selectedSpecialtiesHeader}>
-                                Selected: {selectedSpecialties.length > 0 
-                                    ? selectedSpecialties.join(", ") 
+                            <ThemedText
+                                type="defaultSemiBold"
+                                style={styles.selectedSpecialtiesHeader}
+                            >
+                                Selected:{" "}
+                                {selectedSpecialties.length > 0
+                                    ? selectedSpecialties.join(", ")
                                     : "None"}
                             </ThemedText>
                             <Picker
                                 selectedValue=""
                                 onValueChange={(value) => {
-                                    if (value && !selectedSpecialties.includes(value)) {
-                                        setSelectedSpecialties([...selectedSpecialties, value]);
+                                    if (
+                                        value &&
+                                        !selectedSpecialties.includes(value)
+                                    ) {
+                                        setSelectedSpecialties([
+                                            ...selectedSpecialties,
+                                            value,
+                                        ]);
                                     }
                                 }}
                                 style={styles.picker}
                             >
-                                <Picker.Item label="Select specialties" value="" />
+                                <Picker.Item
+                                    label="Select specialties"
+                                    value=""
+                                />
                                 {specialties && specialties.length > 0 ? (
                                     specialties.map((specialty, index) => (
                                         <Picker.Item
@@ -225,32 +245,46 @@ export default function CreateRNAudienceScreen() {
                                         />
                                     ))
                                 ) : (
-                                    <Picker.Item label="Loading specialties..." value="" />
+                                    <Picker.Item
+                                        label="Loading specialties..."
+                                        value=""
+                                    />
                                 )}
                             </Picker>
-                            
+
                             {selectedSpecialties.length > 0 && (
-                                <ScrollView 
-                                    horizontal 
+                                <ScrollView
+                                    horizontal
                                     showsHorizontalScrollIndicator={false}
                                     style={styles.selectedSpecialtiesContainer}
                                 >
-                                    {selectedSpecialties.map((specialty, index) => (
-                                        <View key={index} style={styles.specialtyChip}>
-                                            <ThemedText>{specialty}</ThemedText>
-                                            <Ionicons
-                                                name="close-circle" 
-                                                size={18} 
-                                                color={colors.text}
-                                                onPress={() => {
-                                                    setSelectedSpecialties(
-                                                        selectedSpecialties.filter(s => s !== specialty)
-                                                    );
-                                                }}
-                                                style={styles.removeIcon}
-                                            />
-                                        </View>
-                                    ))}
+                                    {selectedSpecialties.map(
+                                        (specialty, index) => (
+                                            <View
+                                                key={index}
+                                                style={styles.specialtyChip}
+                                            >
+                                                <ThemedText>
+                                                    {specialty}
+                                                </ThemedText>
+                                                <Ionicons
+                                                    name="close-circle"
+                                                    size={18}
+                                                    color={colors.text}
+                                                    onPress={() => {
+                                                        setSelectedSpecialties(
+                                                            selectedSpecialties.filter(
+                                                                (s) =>
+                                                                    s !==
+                                                                    specialty,
+                                                            ),
+                                                        );
+                                                    }}
+                                                    style={styles.removeIcon}
+                                                />
+                                            </View>
+                                        ),
+                                    )}
                                 </ScrollView>
                             )}
                         </View>
@@ -274,10 +308,10 @@ export default function CreateRNAudienceScreen() {
                             <Input
                                 label="Min Years"
                                 value={String(experienceFilter.min_years)}
-                                onChangeText={(text) => 
+                                onChangeText={(text) =>
                                     setExperienceFilter({
                                         ...experienceFilter,
-                                        min_years: parseInt(text) || 0
+                                        min_years: parseInt(text) || 0,
                                     })
                                 }
                                 placeholder="0"
@@ -288,10 +322,10 @@ export default function CreateRNAudienceScreen() {
                             <Input
                                 label="Max Years"
                                 value={String(experienceFilter.max_years)}
-                                onChangeText={(text) => 
+                                onChangeText={(text) =>
                                     setExperienceFilter({
                                         ...experienceFilter,
-                                        max_years: parseInt(text) || 0
+                                        max_years: parseInt(text) || 0,
                                     })
                                 }
                                 placeholder="0"
@@ -304,10 +338,10 @@ export default function CreateRNAudienceScreen() {
                             <Input
                                 label="Min Months"
                                 value={String(experienceFilter.min_months)}
-                                onChangeText={(text) => 
+                                onChangeText={(text) =>
                                     setExperienceFilter({
                                         ...experienceFilter,
-                                        min_months: parseInt(text) || 0
+                                        min_months: parseInt(text) || 0,
                                     })
                                 }
                                 placeholder="0"
@@ -318,10 +352,10 @@ export default function CreateRNAudienceScreen() {
                             <Input
                                 label="Max Months"
                                 value={String(experienceFilter.max_months)}
-                                onChangeText={(text) => 
+                                onChangeText={(text) =>
                                     setExperienceFilter({
                                         ...experienceFilter,
-                                        max_months: parseInt(text) || 0
+                                        max_months: parseInt(text) || 0,
                                     })
                                 }
                                 placeholder="0"
@@ -483,7 +517,7 @@ const styles = StyleSheet.create({
     specialtyChip: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#e2e8f0", 
+        backgroundColor: "#e2e8f0",
         borderRadius: 20,
         paddingHorizontal: 12,
         paddingVertical: 6,
