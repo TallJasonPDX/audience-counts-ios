@@ -176,34 +176,60 @@ export default function CreateRNAudienceScreen() {
                             },
                         ]}
                     >
-                        <Picker
-                            selectedValue={
-                                selectedSpecialties.length > 0
-                                    ? selectedSpecialties[0]
-                                    : ""
-                            }
-                            onValueChange={(value) => {
-                                if (value) {
-                                    setSelectedSpecialties([value]);
-                                } else {
-                                    setSelectedSpecialties([]);
-                                }
-                            }}
-                            style={styles.picker}
-                        >
-                            <Picker.Item label="Select specialties" value="" />
-                            {specialties && specialties.length > 0 ? (
-                                specialties.map((specialty, index) => (
-                                    <Picker.Item
-                                        key={index}
-                                        label={specialty}
-                                        value={specialty}
-                                    />
-                                ))
-                            ) : (
-                                <Picker.Item label="Loading specialties..." value="" />
+                        <View>
+                            <ThemedText type="defaultSemiBold" style={styles.selectedSpecialtiesHeader}>
+                                Selected: {selectedSpecialties.length > 0 
+                                    ? selectedSpecialties.join(", ") 
+                                    : "None"}
+                            </ThemedText>
+                            <Picker
+                                selectedValue=""
+                                onValueChange={(value) => {
+                                    if (value && !selectedSpecialties.includes(value)) {
+                                        setSelectedSpecialties([...selectedSpecialties, value]);
+                                    }
+                                }}
+                                style={styles.picker}
+                            >
+                                <Picker.Item label="Select specialties" value="" />
+                                {specialties && specialties.length > 0 ? (
+                                    specialties.map((specialty, index) => (
+                                        <Picker.Item
+                                            key={index}
+                                            label={specialty}
+                                            value={specialty}
+                                        />
+                                    ))
+                                ) : (
+                                    <Picker.Item label="Loading specialties..." value="" />
+                                )}
+                            </Picker>
+                            
+                            {selectedSpecialties.length > 0 && (
+                                <ScrollView 
+                                    horizontal 
+                                    showsHorizontalScrollIndicator={false}
+                                    style={styles.selectedSpecialtiesContainer}
+                                >
+                                    {selectedSpecialties.map((specialty, index) => (
+                                        <View key={index} style={styles.specialtyChip}>
+                                            <ThemedText>{specialty}</ThemedText>
+                                            <Ionicons
+                                                name="close-circle" 
+                                                size={18} 
+                                                color={colors.text}
+                                                onPress={() => {
+                                                    setSelectedSpecialties(
+                                                        selectedSpecialties.filter(s => s !== specialty)
+                                                    );
+                                                }}
+                                                style={styles.removeIcon}
+                                            />
+                                        </View>
+                                    ))}
+                                </ScrollView>
                             )}
-                        </Picker>
+                        </View>
                     </View>
                 </View>
 
@@ -355,6 +381,27 @@ const styles = StyleSheet.create({
     },
     picker: {
         height: 50,
+    },
+    selectedSpecialtiesHeader: {
+        marginTop: 8,
+        marginBottom: 4,
+    },
+    selectedSpecialtiesContainer: {
+        marginTop: 10,
+        maxHeight: 50,
+    },
+    specialtyChip: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#e2e8f0", 
+        borderRadius: 20,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        marginRight: 8,
+        marginVertical: 4,
+    },
+    removeIcon: {
+        marginLeft: 6,
     },
     geoLogicContainer: {
         flexDirection: "row",
