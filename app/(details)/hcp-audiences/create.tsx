@@ -91,21 +91,30 @@ export default function CreateHCPAudienceScreen() {
         if (!validateForm()) return;
 
         try {
+            // Create the filters object in the expected format
+            const statesArray = states
+                .split(",")
+                .map((s) => s.trim())
+                .filter((s) => s !== "");
+
+            // Create filters object
+            const filtersObj = {
+                specialties: selectedSpecialties,
+                states: statesArray,
+                zip_regions: zipRegions.filter(
+                    (region) => region.label.trim() && region.zip.trim(),
+                ),
+                geo_logic: geoLogic,
+            };
+
+            // Generate SQL query based on filters
+            const sql_query = await generateHCPSqlQuery(filtersObj);
+
             const audienceData = {
                 name,
                 description,
-                sql_query: null, // Add null sql_query to prevent server error
-                filters: {
-                    specialties: selectedSpecialties,
-                    states: states
-                        .split(",")
-                        .map((s) => s.trim())
-                        .filter((s) => s !== ""),
-                    zip_regions: zipRegions.filter(
-                        (region) => region.label.trim() && region.zip.trim(),
-                    ),
-                    geo_logic: geoLogic,
-                },
+                sql_query, // Add generated SQL query
+                filters: filtersObj,
             };
 
             await createAudience(audienceData);
