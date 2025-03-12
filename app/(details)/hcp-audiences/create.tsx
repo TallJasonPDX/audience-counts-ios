@@ -12,6 +12,7 @@ import useApi from "../../hooks/useApi";
 import Colors from "../../constants/Colors";
 import useColorScheme from "../../hooks/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
+import { generateHCPSqlQuery } from "../../utils/sqlGenerator"; // Added import
 
 export default function CreateHCPAudienceScreen() {
     const colorScheme = useColorScheme() || "light";
