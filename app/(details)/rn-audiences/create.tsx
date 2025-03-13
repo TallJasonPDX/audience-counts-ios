@@ -52,7 +52,7 @@ export default function CreateRNAudienceScreen() {
                 if (Array.isArray(response)) {
                     setSpecialties(response.map((s: any) => s.specialty));
                 } else if (response && typeof response === "object") {
-                    // Handle if response is an object with data array inside
+                    // Handle if response is a object with data array inside
                     const specialtiesData =
                         response.data || response.specialties || [];
                     if (Array.isArray(specialtiesData)) {
